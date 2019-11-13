@@ -1,31 +1,30 @@
-function [speed,speed_tA,fig_count] = Calc_Speed(xy_no_minus_ones,timestamps_no_minus_ones,times,fig_count)
+function [speed,speed_tA] = Calc_Speed(xy_no_minus_ones,timestamps_no_minus_ones)
 speed = []; 
 
 cf  = 0.1176% conversion factor from pixel to mm (mm/pixel)
 
 for i = 1:length(xy_no_minus_ones)-1
-%     disp(i)
+    disp(i)
     speed(i) = cf*sqrt(((xy_no_minus_ones(1,i)-xy_no_minus_ones(1,i+1))^2 + (xy_no_minus_ones(2,i)-xy_no_minus_ones(2,i+1))^2)/((timestamps_no_minus_ones(i)+timestamps_no_minus_ones(i+1))/2));
 end
 
 speed_tA = []; 
-for i = 50:length(speed)-50
-speed_tA(i-49) = mean(speed(i-49:i+50));
+for i = 300:length(speed)-300
+speed_tA(i-299) = mean(speed(i-299:i+300));
 end
 
 X = [];
 Y = [];
 Z = [];
 count = 0;
-figure(fig_count+1)
-fig_count = fig_count+1
-for j = 50:50:length(xy_no_minus_ones)-51
+figure;
+for j = 300:150:length(xy_no_minus_ones)-301
     
-    if isnan(speed_tA(j-49)) == 0
+    if isnan(speed_tA(j-299)) == 0
         count = count+1;
         X(count) = xy_no_minus_ones(1,j);
         Y(count) = xy_no_minus_ones(2,j);
-        Z(count) = speed_tA(j-49);
+        Z(count) = speed_tA(j-299);
         maxspeed = max(speed_tA); %pre-calculated value
         if Z(count)/maxspeed < 1
             scatter(X(count),Y(count),140,'filled','MarkerFaceColor',[Z(count)/maxspeed,0,1-Z(count)/maxspeed],'MarkerEdgeColor',[0,0,0]);
@@ -37,8 +36,7 @@ for j = 50:50:length(xy_no_minus_ones)-51
     end
 end    
 
-figure(fig_count+1)
-fig_count = fig_count+1
-plot(times(50:end-51),speed_tA)
+figure
+plot(x_y_time_color.time(300:end-301),speed_tA)
 
 end

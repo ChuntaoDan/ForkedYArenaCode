@@ -22,6 +22,7 @@ function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_li
             if more_count < 10
                 warning('more  than 1 oject IDed')
                 more_count = more_count+1
+                xy(:,count) = -1;
             else
                 for pics = 1:10
                     background(:,:,pics) = getsnapshot(vidobj2);
@@ -40,11 +41,13 @@ function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_li
 %                 flushdata(vidobj2)
 %                 delete(vidobj2)
                 more_count = 0;
+                xy(:,count) = -1;
             end    
         else 
             if less_count < 10
                 warning('more  than 1 oject IDed')
                 less_count = less_count+1
+                xy(:,count) = -1;
             else
                 for pics = 1:10
                     background(:,:,pics) = getsnapshot(vidobj2);
@@ -62,7 +65,8 @@ function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_li
 
 %                 flushdata(vidobj2)
 %                 delete(vidobj2)
-                less_count = 0;            
+                less_count = 0; 
+                xy(:,count) = -1;
             end
     %     x and y coordinates of the fly for each snapshot
     %     Here you can incorporate a case structure to control the Reward and
