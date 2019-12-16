@@ -6,7 +6,7 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
     O_A_Color = color_vec(1,:);
     O_M_Color = 0.6*color_vec(1,:);
     M_A_Color = color_vec(7,:);
-    M_O_Color = 0.3*color_vec(7,:);
+    M_O_Color = 0.7*color_vec(7,:);
         
         
     summed_choices_ends = zeros(length(x_y_time_color.time),1);

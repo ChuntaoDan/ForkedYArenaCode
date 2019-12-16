@@ -7,7 +7,7 @@ function [x_y_time_color] = plot_position_choices(region_at_time,xy,timestamps,a
     O_A_Color = color_vec(1,:);
     O_M_Color = 0.6*color_vec(1,:);
     M_A_Color = color_vec(7,:);
-    M_O_Color = 0.3*color_vec(7,:);
+    M_O_Color = 0.7*color_vec(7,:);
 
         
     

@@ -9,36 +9,36 @@ for i = 1:length(xy_no_minus_ones)-1
 end
 
 speed_tA = []; 
-for i = 50:length(speed)-50
-speed_tA(i-49) = mean(speed(i-49:i+50));
+for i = 10:length(speed)-10
+speed_tA(i-9) = mean(speed(i-9:i+10));
 end
+% 
+% X = [];
+% Y = [];
+% Z = [];
+% count = 0;
+% figure(fig_count+1)
+% fig_count = fig_count+1
+% for j = 50:50:length(xy_no_minus_ones)-51
+%     
+%     if isnan(speed_tA(j-49)) == 0
+%         count = count+1;
+%         X(count) = xy_no_minus_ones(1,j);
+%         Y(count) = xy_no_minus_ones(2,j);
+%         Z(count) = speed_tA(j-49);
+%         maxspeed = max(speed_tA); %pre-calculated value
+%         if Z(count)/maxspeed < 1
+%             scatter(X(count),Y(count),140,'filled','MarkerFaceColor',[Z(count)/maxspeed,0,1-Z(count)/maxspeed],'MarkerEdgeColor',[0,0,0]);
+%             hold on
+%         else 
+%             scatter(X(count),Y(count),140,'filled','MarkerFaceColor',[1,0,0],'MarkerEdgeColor',[0,0,0]);
+%             hold on
+%         end    
+%     end
+% end    
 
-X = [];
-Y = [];
-Z = [];
-count = 0;
 figure(fig_count+1)
 fig_count = fig_count+1
-for j = 50:50:length(xy_no_minus_ones)-51
-    
-    if isnan(speed_tA(j-49)) == 0
-        count = count+1;
-        X(count) = xy_no_minus_ones(1,j);
-        Y(count) = xy_no_minus_ones(2,j);
-        Z(count) = speed_tA(j-49);
-        maxspeed = max(speed_tA); %pre-calculated value
-        if Z(count)/maxspeed < 1
-            scatter(X(count),Y(count),140,'filled','MarkerFaceColor',[Z(count)/maxspeed,0,1-Z(count)/maxspeed],'MarkerEdgeColor',[0,0,0]);
-            hold on
-        else 
-            scatter(X(count),Y(count),140,'filled','MarkerFaceColor',[1,0,0],'MarkerEdgeColor',[0,0,0]);
-            hold on
-        end    
-    end
-end    
-
-figure(fig_count+1)
-fig_count = fig_count+1
-plot(times(50:end-51),speed_tA)
+plot(times(10:end-11),speed_tA)
 
 end
