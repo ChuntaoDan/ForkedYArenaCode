@@ -76,7 +76,7 @@ function [inst_choice_ratio,inst_income_ratio,ave_pre_choice_ratio,ave_post_choi
     
     plot(inst_choice_ratio,'LineWidth',4,'Color','b')
     hold on
-    if protocol_100_0 ~= 1
+    if protocol_100_0 ~= 1 && protocol_100_0 ~= 4
         plot(inst_income_ratio,'LineWidth',4,'Color','k')
         if protocol_100_0 == 2
             plot(length(cps_pre)+1:length(cps_pre)+length(cps_post),ones(1,length(cps_post))*ave_post_reward_ratio,'LineWidth',6,'Color','k')
@@ -84,8 +84,10 @@ function [inst_choice_ratio,inst_income_ratio,ave_pre_choice_ratio,ave_post_choi
             plot(length(cps_pre)+1:length(cps_pre)+length(cps_post),ones(1,length(cps_post))*ave_post_reward_ratio,'LineWidth',6,'Color','k')
     
         end
-    else
+    elseif protocol_100_0 == 1
         plot(length(cps_pre)+1:length(cps_pre)+length(cps_post),ones(1,length(cps_post))*90,'LineWidth',6,'Color','k')
+    elseif protocol_100_0 == 4
+        plot(length(cps_pre)+1:length(cps_pre)+length(cps_post),ones(1,length(cps_post))*0,'LineWidth',6,'Color','k')
     end
     plot(1:length(cps_pre),ones(1,length(cps_pre))*ave_pre_choice_ratio,'LineWidth',6,'Color','b')
     plot(length(cps_pre)+1:length(cps_pre)+length(cps_post),ones(1,length(cps_post))*ave_post_choice_ratio,'LineWidth',6,'Color','b')

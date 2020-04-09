@@ -17,7 +17,7 @@ function [PI,cps] = preference_index_multConts(air_arm,right_left,x_y_time_color
     if air_arm(end) == 0
         cps = cps(2:end-1);
     end    
-    for i = cps(2:end-1)
+    for i = cps(2:end)
         home_arm = air_arm(i-1);
         if i == length(air_arm)
             no_match = 1

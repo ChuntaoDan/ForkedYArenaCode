@@ -1,4 +1,4 @@
-function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summed_O_choices_center,summed_M_choices_ends, summed_M_choices_center,fig_count,net_summed_choices,choice_order,reward_order] = summed_choices(cps,odor_crossing,x_y_time_color,cps_pre,fig_count,protocol_100_0,reward)
+function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summed_O_choices_center,summed_M_choices_ends, summed_M_choices_center,fig_count,net_summed_choices,choice_order,reward_order] = summed_choices_mult_conts(cps,odor_crossing,x_y_time_color,cps_pre,fig_count,protocol_100_0,reward)
     
 
     color_vec = cbrewer('qual','Dark2',10,'cubic')
@@ -55,7 +55,7 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
         if summed_choices_ends(i-1) ~= summed_choices_ends(i)
             if summed_M_choices_ends(i-1) ~= summed_M_choices_ends(i)
                 choice_order(length(choice_order)+1) = 1;
-                if protocol_100_0 ~= 1
+                if protocol_100_0 ~= 1 && protocol_100_0 ~= 4
                     if reward(i-1) == 1
                         reward_order(length(choice_order)) = 1;
                     elseif reward(i-1) == 0
@@ -64,7 +64,7 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
                 end    
             elseif summed_O_choices_ends(i-1) ~= summed_O_choices_ends(i)
                 choice_order(length(choice_order)+1) = 2;
-                if protocol_100_0 ~= 1
+                if protocol_100_0 ~= 1 && protocol_100_0 ~= 4
                     if reward(i-1) == 1
                       reward_order(length(choice_order)) = 2;
                     elseif reward(i-1) == 0
@@ -117,6 +117,17 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
         line2_y2 = summed_O_choices_ends(end);
         line2_y = line2_y1 : line2_y2;
         line2_x = ([1:length(line2_y)])/ave_post_reward_slope + summed_M_choices_ends(pre_end_time);
+    elseif protocol_100_0 == 4 
+        line1_x1 = 0;
+        line1_x2 = summed_M_choices_ends(pre_end_time);
+        line1_x = line1_x1:line1_x2;
+        line1_y = line1_x;
+
+        line2_x1 = summed_M_choices_ends(pre_end_time);
+        line2_x2 = summed_M_choices_ends(end);
+        line2_x = line2_x1 : line2_x2;
+        line2_y = zeros(1,length(line2_x)) + summed_O_choices_ends(pre_end_time);
+   
     end    
 
     

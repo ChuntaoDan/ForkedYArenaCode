@@ -35,10 +35,14 @@ function [] = plotting_PIs(save_fig,lookback)
         elseif expt_name(end-4:end) == '80_20'
             protocol_100_0 = 2;
         elseif expt_name(end-4:end) == '60_40'
-            protocol_100_0 = 3;    
+            protocol_100_0 = 3;   
         end    
         cd(expt_name)
         conds = dir(expt_name);
+        
+        if exist('protocol_100_0') == 0
+            no_prot_in_expt = 1;
+        end
 
         for cond_n = 1:length(conds)
             % Skip the folders containing '.'
@@ -51,6 +55,19 @@ function [] = plotting_PIs(save_fig,lookback)
 
             % Change directory to file containing flycounts 
             cond = strcat(expt_name, '/', conds(cond_n).name);
+            if no_prot_in_expt == 1
+                if sum(cond(end-10:end-6) == '100_0') == 5
+                    protocol_100_0 = 1;
+                elseif sum(cond(end-4:end) == '80_20') == 5
+                    protocol_100_0 = 2;
+                elseif sum(cond(end-4:end) == '60_40') == 5
+                    protocol_100_0 = 3;   
+                elseif sum(cond(end-4:end) == '100_0') == 5
+                    protocol_100_0 = 1;
+                elseif sum(cond(end-4:end) == '0_100') == 5
+                    protocol_100_0 = 4;
+                end
+            end
             cd(cond)
             
             
@@ -290,14 +307,14 @@ function [] = plotting_PIs(save_fig,lookback)
             % GENERATED
             if save_fig == 1 %&&  exist('speed_time.fig') ~= 2
                 fig_count = 0;
-%                 saveas(figure(1),'pre_reward_summary.fig')
-%                 saveas(figure(2),'post_reward_summary.fig')
-%                 saveas(figure(3),'end_choices.fig')
-%                 saveas(figure(4),'center_choices.fig')
-%                 saveas(figure(5),'summed_choices_ends.fig')
-%                 saveas(figure(6),'inst_CR_lb10.fig')
+                saveas(figure(1),'pre_reward_summary.fig')
+                saveas(figure(2),'post_reward_summary.fig')
+                saveas(figure(3),'end_choices.fig')
+                saveas(figure(4),'center_choices.fig')
+                saveas(figure(5),'summed_choices_ends.fig')
+                saveas(figure(6),'inst_CR_lb10.fig')
 %                 saveas(figure(7),'speed_heatmap.jpg')
-%                 saveas(figure(7),'speed_time.fig')
+                saveas(figure(7),'speed_time.fig')
 %                 save('inst_CR_lb10.mat','inst_choice_ratio')
 %                 save('inst_IR_lb10.mat','inst_income_ratio')
 %                 save('cps_pre.mat','cps_pre')
