@@ -60,7 +60,7 @@ frameRate = 30;
 %movie format
 movieFormat = 'ufmf';
 %region of interest
-ROI = [128 0 1024 1024];
+ROI = [0 0 1280 1024];
 %trigger mode
 triggerMode = 'internal';
 

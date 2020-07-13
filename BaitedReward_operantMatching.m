@@ -66,13 +66,13 @@ handles.movieFormat = movieFormat;
 
 % Defining variables
 
-snapshot = zeros(1024,1280);
-xy = [];
-air_arm = [];
-right_left = [];
-count = 0;
-more_count = 0;
-less_count = 0;
+% snapshot = zeros(1024,1280);
+% xy = [];
+% air_arm = [];
+% right_left = [];
+% count = 0;
+% more_count = 0;
+% less_count = 0;
 
 %imaqmem(20000000000);
 
@@ -121,10 +121,14 @@ end
 %% DEFINE TRACKING CAMERA AND BINARY MASK CALCULATION
 
 vidobj2 = videoinput('pointgrey',2);
+triggerconfig(vidobj2, 'manual');
+vidobj2.FramesPerTrigger = inf; 
+start(vidobj2);
+trigger(vidobj2) 
 %         vidobj2.LoggingMode = 'disk&memory';
 pause(0.1)
 
-Track_cam_image = getsnapshot(vidobj2);
+Track_cam_image = getdata(vidobj2,1);
 
 % Define regions or load previously defined regions that control which
 % odors to deliver
@@ -165,7 +169,7 @@ end
 %% TAKING BACKGROUND SNAPSHOT.
 
 for pics = 1:10
-    background(:,:,pics) = getsnapshot(vidobj2);
+    background(:,:,pics) = getdata(vidobj2,1);
     % imshow(background(:,:,pics))
     if pics == 1
         sum_background = (1/10)*background(:,:,pics);
@@ -181,6 +185,7 @@ imshow(ave_background)
 flushdata(vidobj2)
 delete(vidobj2)
 
+
 %% PATH FOR EACH NEW EXPT
 oldPath = pwd;
 cd(handles.expDataDir);
@@ -194,7 +199,7 @@ cd(tempPath1);
 handles.expStartTime = datestr(now,30);
 
 dataPath = [tempPath1, '\', handles.expStartTime, '_',handles.rig, '_',...
-    'Cam', num2str(1-1),'GR64f_10_O80_M20reducedFlow'];
+    'Cam', num2str(1-1),'Test'];
 
 if ~exist(dataPath, 'dir')
     tempPath2 = dataPath;
@@ -204,58 +209,72 @@ handles.expDataSubdir{1} = tempPath2;
 
 
 %% RUN EXPT
-flyBowl_camera_control(handles.hComm.flea3(1),'stop');
-%start recording
-trialMovieName = [handles.expDataSubdir{i}, '\movie_', '.', handles.movieFormat];
-flyBowl_camera_control(handles.hComm.flea3(1),'start', trialMovieName);
+% flyBowl_camera_control(handles.hComm.flea3(1),'stop');
+% %start recording
+% trialMovieName = [handles.expDataSubdir{i}, '\movie_', '.', handles.movieFormat];
+% flyBowl_camera_control(handles.hComm.flea3(1),'start', trialMovieName);
+% % 
+% time = 0;
+% timestamps = [];
+% statestamps = [];
+% % 
+% vidobj2 = videoinput('pointgrey',2);
+% triggerconfig(vidobj2, 'manual');
+% vidobj2.FramesPerTrigger = inf; 
+% start(vidobj2);
+% trigger(vidobj2) 
 
-time = 0;
-timestamps = [];
-statestamps = [];
-
-vidobj2 = videoinput('pointgrey',2);
-triggerconfig(vidobj2, 'manual');
-vidobj2.FramesPerTrigger = inf; 
-start(vidobj2);
-trigger(vidobj2) 
-
-FoodPortStatus = 0; % 0 implies all food ports are closed. 1 implies atleast one is open
-PreviousZone = 0;   % previous zone fly was located in
-PresentZone = 0;    % present zone fly is located in
-od_state = 0;        % defines odorized state; 0 - first trial or just after feeding has taken place actual odorized state could be 1, 2 or 3
-                    % 1 - arm 0 has clean air
-                    % 2 - arm 1 has clean air
-                    % 3 - arm 2 has clean air
-ch_state = 1;       % 1 - Right is OCT, Left is MCH
-                    % 2 - Right is MCH, Left is OCT
-reward = [];
-reset = 0;
+% FoodPortStatus = 0; % 0 implies all food ports are closed. 1 implies atleast one is open
+% PreviousZone = 0;   % previous zone fly was located in
+% PresentZone = 0;    % present zone fly is located in
+% od_state = 0;        % defines odorized state; 0 - first trial or just after feeding has taken place actual odorized state could be 1, 2 or 3
+%                     % 1 - arm 0 has clean air
+%                     % 2 - arm 1 has clean air
+%                     % 3 - arm 2 has clean air
+% ch_state = 1;       % 1 - Right is OCT, Left is MCH
+%                     % 2 - Right is MCH, Left is OCT
+% reward = [];
+% reset = 0;
 n_trials = 1
-baiting = [0;0];
+clear('vidobj2')
+% baiting = [0;0];
 x = input('Enter intial reward probability for OCT - Range 0 to 1')
+time = 0;
 
-while n_trials < 361
-    if exist('vidobj2') == 0
-        vidobj2 = videoinput('pointgrey',2);
-        triggerconfig(vidobj2, 'manual');
-        vidobj2.FramesPerTrigger = inf; 
-        start(vidobj2);
-        trigger(vidobj2) 
+
+    while n_trials < 361 && time<21600
+        if exist('vidobj2') == 0
+            vidobj2 = videoinput('pointgrey',2);
+            triggerconfig(vidobj2, 'manual');
+            vidobj2.FramesPerTrigger = inf; 
+            start(vidobj2);
+            trigger(vidobj2) 
+        end
+        if time>21600
+            n_trials = 400;
+        end    
+        tic
+        if n_trials == 41
+            [n_trials,time_n,vidobj2] = run_section_expt(n_trials,dataPath,x,ave_background,binarymask1,binarymask2,binarymask3,binarymask4,binarymask5,binarymask6,binarymask7,binarymask8,binarymask9,valvedio1,valvedio2,valvedio3,hComm,vidobj2)
+            time = time+time_n;
+        elseif n_trials == 121
+            [n_trials,time_n,vidobj2] = run_section_expt(n_trials,dataPath,1-x,ave_background,binarymask1,binarymask2,binarymask3,binarymask4,binarymask5,binarymask6,binarymask7,binarymask8,binarymask9,valvedio1,valvedio2,valvedio3,hComm,vidobj2)
+            time = time+time_n;
+        elseif n_trials == 201
+            [n_trials,time_n,vidobj2] = run_section_expt(n_trials,dataPath,x-0.2,ave_background,binarymask1,binarymask2,binarymask3,binarymask4,binarymask5,binarymask6,binarymask7,binarymask8,binarymask9,valvedio1,valvedio2,valvedio3,hComm,vidobj2)
+            time = time+time_n;
+        elseif n_trials == 281
+            [n_trials,time_n,vidobj2] = run_section_expt(n_trials,dataPath,1.2-x,ave_background,binarymask1,binarymask2,binarymask3,binarymask4,binarymask5,binarymask6,binarymask7,binarymask8,binarymask9,valvedio1,valvedio2,valvedio3,hComm,vidobj2)
+            time = time+time_n;
+        elseif n_trials < 41   
+            [n_trials,time_n,vidobj2] = run_naive_section_expt(n_trials,dataPath,ave_background,binarymask1,binarymask2,binarymask3,binarymask4,binarymask5,binarymask6,binarymask7,binarymask8,binarymask9,valvedio1,valvedio2,valvedio3,hComm,vidobj2)
+            time = time+time_n;
+        end
+
+        s = toc;
+        time = time + s;
     end
-%     tic
-    if n_trials == 41
-        n_trials = run_section_expt(n_trials,dataPath,x);
-    elseif n_trials == 121
-        n_trials = run_section_expt(n_trials,dataPath,1-x);
-    elseif n_trials == 201
-        n_trials = run_section_expt(n_trials,dataPath,x-0.2);
-    elseif n+trials == 281
-        n_trials = run_section_expt(n_trials,dataPath,1.2-x);
-    elseif n_trials <41   
-        n_trials = run_naive_section_expt(n_trials,dataPath);
-    end
-   
-end
+
 
 
 delete(vidobj2)
@@ -265,20 +284,20 @@ s=FlipValveUSB6525({'Vial1','Vial2','Vial3','Vial4','Vial5','Final'},[0 0 0 0 0 
 s=FlipValveUSB6525({'Vial1','Vial2','Vial3','Vial4','Vial5','Final'},[0 0 0 0 0 0],valvedio2); %
 s=FlipValveUSB6525({'Vial1','Vial2','Vial3','Vial4','Vial5','Final'},[0 0 0 0 0 0],valvedio3); %
 
-% Shutting down and saving video
-flyBowl_camera_control(handles.hComm.flea3(i),'stop');            
-flyBowl_camera_control(handles.hComm.flea3(i),'preview');
-
-movieFileWithVer = [handles.expDataSubdir{i}, '\movie*.', handles.movieFormat];
-    
-D = dir(movieFileWithVer);
-if ~isempty(D)
-    for j = 1:length(D)
-        movieFileWithVer = fullfile(handles.expDataSubdir{i},D(j).name);
-        defaultMovieFile = fullfile(handles.expDataSubdir{i}, [D(j).name(1:end-40),'.',handles.movieFormat]);
-        movefile(movieFileWithVer, defaultMovieFile);
-    end
-end
+% % Shutting down and saving video
+% flyBowl_camera_control(handles.hComm.flea3(i),'stop');            
+% flyBowl_camera_control(handles.hComm.flea3(i),'preview');
+% 
+% movieFileWithVer = [handles.expDataSubdir{i}, '\movie*.', handles.movieFormat];
+%     
+% D = dir(movieFileWithVer);
+% if ~isempty(D)
+%     for j = 1:length(D)
+%         movieFileWithVer = fullfile(handles.expDataSubdir{i},D(j).name);
+%         defaultMovieFile = fullfile(handles.expDataSubdir{i}, [D(j).name(1:end-40),'.',handles.movieFormat]);
+%         movefile(movieFileWithVer, defaultMovieFile);
+%     end
+% end
 
 % saving variables
 matfilename = strcat(dataPath, '\other_variables.mat')
@@ -286,7 +305,7 @@ save(matfilename)
 
 % turning off IR and closing the serial port
 olfactoryArena_LED_control(handles.hComm.hLEDController,'IR',0);
-flyBowl_camera_control(handles.hComm.flea3(i),'stop'); 
+% flyBowl_camera_control(handles.hComm.flea3(i),'stop'); 
 
 fclose(hLEDController);
 

@@ -168,9 +168,10 @@ catch
 end
 %% TAKING BACKGROUND SNAPSHOT.
 
-for pics = 1:10
-    background(:,:,pics) = getdata(vidobj2,1);
+% for pics = 1:10
+    background(:,:,1:10) = getdata(vidobj2,10);
     % imshow(background(:,:,pics))
+for pics = 1:10
     if pics == 1
         sum_background = (1/10)*background(:,:,pics);
     else    
@@ -184,7 +185,7 @@ imshow(ave_background)
 
 flushdata(vidobj2)
 delete(vidobj2)
-clear('vidobj2')
+
 %% PATH FOR EACH NEW EXPT
 oldPath = pwd;
 cd(handles.expDataDir);
@@ -198,7 +199,7 @@ cd(tempPath1);
 handles.expStartTime = datestr(now,30);
 
 dataPath = [tempPath1, '\', handles.expStartTime, '_',handles.rig, '_',...
-    'Cam', num2str(1-1),'GR64f_9_smallY'];
+    'Cam', num2str(1-1),'GR64f_4_smallY'];
 
 if ~exist(dataPath, 'dir')
     tempPath2 = dataPath;
@@ -232,7 +233,6 @@ od_state = 0;        % defines odorized state; 0 - first trial or just after fee
 ch_state = 1;       % 1 - Right is OCT, Left is MCH
                     % 2 - Right is MCH, Left is OCT
 reset = 0
-delete_vidobj_count = 0;
 while time < 3600
     if exist('vidobj2') == 0
         vidobj2 = videoinput('pointgrey',2);
@@ -249,8 +249,8 @@ while time < 3600
     %     of the fly in the arena
 
         
-        [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
-    
+        
+        [xy,count,snapshot,ave_background, more_count, less_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count);  
         xy_now = round(xy(:,end));
         if sum(xy_now == [-1,-1]) == 2
             if vidobj2.FramesAcquired > 100000
@@ -268,7 +268,7 @@ while time < 3600
             right_left(length(right_left)+1) = ch_state;
             PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1)
             while isempty(PresentZone) == 1
-                [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
+                [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
                 xy_now = round(xy(:,end));
                 if sum(xy_now == [-1,-1]) == 2
                     if vidobj2.FramesAcquired > 100000
@@ -387,7 +387,7 @@ while time < 3600
                 PastZone = PresentZone;
                 PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1);
                 while isempty(PresentZone) == 1
-                    [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
+                    [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
                     xy_now = round(xy(:,end));
                     if sum(xy_now == [-1,-1]) == 2
                         if vidobj2.FramesAcquired > 100000
@@ -403,7 +403,7 @@ while time < 3600
                     end   
                     PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1);
                 end
-    %             if PresentZone == 6 && PastZone == 3
+        %             if PresentZone == 6 && PastZone == 3
     %                 if ch_state == 1
     %                     servos.expose(2) 
     %                 end
@@ -412,20 +412,20 @@ while time < 3600
     %                     servos.expose(1) 
     %                 end  
                 if PresentZone == 9 && PastZone == 6
-                    if ch_state == 1
+                    if ch_state == 2
                         olfactoryArena_LED_control(hComm.hLEDController,'ON'); 
                         pause(0.5); 
                         olfactoryArena_LED_control(hComm.hLEDController,'OFF');
                         od_state = 0
-                    elseif ch_state == 2
+                    elseif ch_state == 1
                         
                         od_state = 0
                     end
                 elseif PresentZone == 8 && PastZone == 5
-                    if ch_state == 1
+                    if ch_state == 2
                         
                         od_state = 0
-                    elseif ch_state == 2
+                    elseif ch_state == 1
                         olfactoryArena_LED_control(hComm.hLEDController,'ON'); 
                         pause(0.5); 
                         olfactoryArena_LED_control(hComm.hLEDController,'OFF');
@@ -442,7 +442,7 @@ while time < 3600
                 PastZone = PresentZone;
                 PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1);
                 while isempty(PresentZone) == 1
-                    [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
+                    [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
                     xy_now = round(xy(:,end));
                     if sum(xy_now == [-1,-1]) == 2
                         if vidobj2.FramesAcquired > 100000
@@ -467,20 +467,20 @@ while time < 3600
     %                     servos.expose(0) 
     %                 end  
                 if PresentZone == 9 && PastZone == 6
-                    if ch_state == 2
+                    if ch_state == 1
                         olfactoryArena_LED_control(hComm.hLEDController,'ON'); 
                         pause(0.5); 
                         olfactoryArena_LED_control(hComm.hLEDController,'OFF');
                         od_state = 0
-                    elseif ch_state == 1
+                    elseif ch_state == 2
                         
                         od_state = 0
                     end
                 elseif PresentZone == 7 && PastZone == 4
-                    if ch_state == 2
+                    if ch_state == 1
                         
                         od_state = 0
-                    elseif ch_state == 1
+                    elseif ch_state == 2
                         olfactoryArena_LED_control(hComm.hLEDController,'ON'); 
                         pause(0.5); 
                         olfactoryArena_LED_control(hComm.hLEDController,'OFF');
@@ -496,7 +496,7 @@ while time < 3600
                 PastZone = PresentZone;
                 PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1);
                 while isempty(PresentZone) == 1
-                    [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
+                    [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
                     xy_now = round(xy(:,end));
                     if sum(xy_now == [-1,-1]) == 2
                         if vidobj2.FramesAcquired > 100000
@@ -521,20 +521,20 @@ while time < 3600
     %                     servos.expose(0) 
     %                 end  
                 if PresentZone == 8 && PastZone == 5
-                    if ch_state == 1
+                    if ch_state == 2
                         olfactoryArena_LED_control(hComm.hLEDController,'ON'); 
                         pause(0.5); 
                         olfactoryArena_LED_control(hComm.hLEDController,'OFF');
                         od_state = 0
-                    elseif ch_state == 2
+                    elseif ch_state == 1
                         
                         od_state = 0
                     end
                 elseif PresentZone == 7 && PastZone == 4
-                    if ch_state == 1
+                    if ch_state == 2
                         
                         od_state = 0
-                    elseif ch_state == 2
+                    elseif ch_state == 1
                         olfactoryArena_LED_control(hComm.hLEDController,'ON'); 
                         pause(0.5); 
                         olfactoryArena_LED_control(hComm.hLEDController,'OFF');
@@ -545,7 +545,7 @@ while time < 3600
             end  
         end
     elseif time < 1800   
-        [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
+        [xy,count,snapshot,ave_background, more_count, less_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count);  
         xy_now = round(xy(:,end));
         if sum(xy_now == [-1,-1]) == 2
             if vidobj2.FramesAcquired > 100000
@@ -563,7 +563,7 @@ while time < 3600
             right_left(length(right_left)+1) = ch_state;
             PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1)
             while isempty(PresentZone) == 1
-                [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
+                [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
                 xy_now = round(xy(:,end));
                 if sum(xy_now == [-1,-1]) == 2
                     if vidobj2.FramesAcquired > 100000
@@ -633,8 +633,8 @@ while time < 3600
                 PastZone = PresentZone;
                 PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1);
                 while isempty(PresentZone) == 1
-                    [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
-                     xy_now = round(xy(:,end));
+                    [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
+                    xy_now = round(xy(:,end));
                     if sum(xy_now == [-1,-1]) == 2
                         if vidobj2.FramesAcquired > 100000
                             delete(vidobj2);
@@ -676,8 +676,8 @@ while time < 3600
                 PastZone = PresentZone;
                 PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1);
                 while isempty(PresentZone) == 1
-                    [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
-                     xy_now = round(xy(:,end));
+                    [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
+                    xy_now = round(xy(:,end));
                     if sum(xy_now == [-1,-1]) == 2
                         if vidobj2.FramesAcquired > 100000
                             delete(vidobj2);
@@ -716,7 +716,7 @@ while time < 3600
                 PastZone = PresentZone;
                 PresentZone = find([binarymask1(xy_now(2),xy_now(1)),binarymask2(xy_now(2),xy_now(1)),binarymask3(xy_now(2),xy_now(1)),binarymask4(xy_now(2),xy_now(1)),binarymask5(xy_now(2),xy_now(1)),binarymask6(xy_now(2),xy_now(1)),binarymask7(xy_now(2),xy_now(1)),binarymask8(xy_now(2),xy_now(1)),binarymask9(xy_now(2),xy_now(1))]==1,1);
                 while isempty(PresentZone) == 1
-                    [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
+                    [xy,count,snapshot,ave_background, more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count);  
                     xy_now = round(xy(:,end));
                     if sum(xy_now == [-1,-1]) == 2
                         if vidobj2.FramesAcquired > 100000
