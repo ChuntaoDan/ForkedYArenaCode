@@ -1,5 +1,5 @@
 %% Calculate PI from an olfactory arena experiment
-function [] = plotting_PIs(save_fig)
+function [] = plotting_PIs(save_fig,lookback)
 %     close all
 %     clear
 %     clc
@@ -17,7 +17,9 @@ function [] = plotting_PIs(save_fig)
     count = 0;
     cpms = [];
     fig_count = 0;
-
+    ave_pre_choice_ratios = [];
+    ave_post_choice_ratios = [];
+    
     color_vec = cbrewer('qual','Dark2',10,'cubic');
     Air_Color = 0*color_vec(6,:);
     O_A_Color = color_vec(1,:);
@@ -28,8 +30,19 @@ function [] = plotting_PIs(save_fig)
 
     for expt_n = 1:length(expts)
         expt_name = expts{expt_n, 1};
+        if expt_name(end-10:end-6) == '100_0'
+            protocol_100_0 = 1;
+        elseif expt_name(end-4:end) == '80_20'
+            protocol_100_0 = 2;
+        elseif expt_name(end-4:end) == '60_40'
+            protocol_100_0 = 3;   
+        end    
         cd(expt_name)
         conds = dir(expt_name);
+        
+        if exist('protocol_100_0') == 0
+            no_prot_in_expt = 1;
+        end
 
         for cond_n = 1:length(conds)
             % Skip the folders containing '.'
@@ -42,11 +55,28 @@ function [] = plotting_PIs(save_fig)
 
             % Change directory to file containing flycounts 
             cond = strcat(expt_name, '/', conds(cond_n).name);
+            if no_prot_in_expt == 1
+                if sum(cond(end-10:end-6) == '100_0') == 5
+                    protocol_100_0 = 1;
+                elseif sum(cond(end-4:end) == '80_20') == 5
+                    protocol_100_0 = 2;
+                elseif sum(cond(end-4:end) == '60_40') == 5
+                    protocol_100_0 = 3;   
+                elseif sum(cond(end-4:end) == '100_0') == 5
+                    protocol_100_0 = 1;
+                elseif sum(cond(end-4:end) == '0_100') == 5
+                    protocol_100_0 = 4;
+                end
+            end
             cd(cond)
             
             
             load('all_variables.mat')
-
+            exist reward
+            if ans == 0 
+                reward = [];
+            end    
+            
             [pi,cps] = preference_index(air_arm,right_left);
             [a,b,c,d,arm_bias_pi] = arm_bias(air_arm,right_left);
 
@@ -61,7 +91,7 @@ function [] = plotting_PIs(save_fig)
 
            % PLOTTING position vs time with different colors for different
            % odors in arm
-            cont_switch = find(x_y_time_color.time >1800,1);
+            cont_switch = find(x_y_time_color.time >1750,1);
             [pi_pre(cond_n-2),cps_pre] = preference_index(air_arm(1:cont_switch-1),right_left(1:cont_switch-1));
             [pi_post(cond_n-2),cps_post] = preference_index(air_arm(cont_switch:length(x_y_time_color.time)),right_left(cont_switch:length(x_y_time_color.time)));
             for k = 1:2
@@ -70,10 +100,18 @@ function [] = plotting_PIs(save_fig)
                     fig_count = fig_count+1
                     hold on
                     for i  = 1:cont_switch-1
-                        if x_y_time_color.color == Air_Color
-                            plot(x_y_time_color.time(i:i+1),-1*(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                        if sum(x_y_time_color.color(i) == Air_Color) == 3
+                            if sum(x_y_time_color.color(i+1) == Air_Color) == 3
+                                plot(x_y_time_color.time(i:i+1),-1*(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            elseif sum(x_y_time_color.color(i+1) == Air_Color) ~= 3
+                                plot(x_y_time_color.time(i:i+1),[-1*(x_y_time_color.distance_up_arm(i)),(x_y_time_color.distance_up_arm(i+1))],'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            end    
                         else
-                            plot(x_y_time_color.time(i:i+1),x_y_time_color.distance_up_arm(i:i+1),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            if sum(x_y_time_color.color(i+1) == Air_Color) == 3
+%                                 plot(x_y_time_color.time(i:i+1),[x_y_time_color.distance_up_arm(i),-1*(x_y_time_color.distance_up_arm(i))],'LineWidth',3,'Color',Air_Color)
+                            else
+                                plot(x_y_time_color.time(i:i+1),(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            end    
                         end
                     end 
                     cc = 0;
@@ -107,10 +145,18 @@ function [] = plotting_PIs(save_fig)
                     fig_count = fig_count+1
                     hold on
                     for i  = cont_switch:length(x_y_time_color.distance_up_arm)-1
-                        if x_y_time_color.color == Air_Color
-                            plot(x_y_time_color.time(i:i+1),-1*(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                        if sum(x_y_time_color.color(i) == Air_Color) == 3
+                            if sum(x_y_time_color.color(i+1) == Air_Color) == 3
+                                plot(x_y_time_color.time(i:i+1),-1*(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            elseif sum(x_y_time_color.color(i+1) == Air_Color) ~= 3
+                                plot(x_y_time_color.time(i:i+1),[-1*(x_y_time_color.distance_up_arm(i)),(x_y_time_color.distance_up_arm(i+1))],'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            end    
                         else
-                            plot(x_y_time_color.time(i:i+1),x_y_time_color.distance_up_arm(i:i+1),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            if sum(x_y_time_color.color(i+1) == Air_Color) == 3
+%                                 plot(x_y_time_color.time(i:i+1),[x_y_time_color.distance_up_arm(i),-1*(x_y_time_color.distance_up_arm(i))],'LineWidth',3,'Color',Air_Color)
+                            else
+                                plot(x_y_time_color.time(i:i+1),(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            end    
                         end
                     end 
                     cc = 0;
@@ -204,10 +250,11 @@ function [] = plotting_PIs(save_fig)
 
             % Plotting # choices over time
 
-            [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summed_O_choices_center,summed_M_choices_ends, summed_M_choices_center] = summed_choices(cps,odor_crossing,x_y_time_color);
-            figure(fig_count+1)
-            fig_count = fig_count+1
-            plot(summed_M_choices_ends,summed_O_choices_ends,'LineWidth',4)
+            [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summed_O_choices_center,summed_M_choices_ends, summed_M_choices_center,fig_count,net_summed_choices,choice_order,reward_order] = summed_choices(cps,odor_crossing,x_y_time_color,cps_pre,fig_count,protocol_100_0,reward);
+            
+            inst_choice_ratio =[];
+            [inst_choice_ratio,inst_income_ratio,ave_pre_choice_ratios(expt_n,cond_n-2),ave_post_choice_ratios(expt_n,cond_n-2),fig_count,ave_post_income_ratios(expt_n,cond_n-2)] = inst_CR(fig_count,cps_pre,cps_post,protocol_100_0,choice_order,reward_order,lookback)
+            
     %         plot(x_y_time_color.time,summed_choices_ends,'LineWidth',4,'Color','b')
     %         hold on
     %         plot(x_y_time_color.time,summed_M_choices_ends,'LineWidth',4,'Color',M_O_Color)
@@ -258,18 +305,24 @@ function [] = plotting_PIs(save_fig)
             end
             % THIS NEEDS TO BE CHANGED AS AND WHEN MORE FIGURE ARE
             % GENERATED
-            if save_fig == 1 &&  exist('speed_time.jpg') ~= 2
+            if save_fig == 1 %&&  exist('speed_time.fig') ~= 2
                 fig_count = 0;
-                saveas(figure(1),'pre_reward_summary.jpg')
-                saveas(figure(2),'post_reward_summary.jpg')
-                saveas(figure(3),'center_choices.jpg')
-                saveas(figure(4),'summed_choices_ends.jpg')
-%                 saveas(figure(5),'speed_heatmap.jpg')
-                saveas(figure(6),'speed_time.jpg')
-                
+                saveas(figure(1),'pre_reward_summary.fig')
+                saveas(figure(2),'post_reward_summary.fig')
+                saveas(figure(3),'end_choices.fig')
+                saveas(figure(4),'center_choices.fig')
+                saveas(figure(5),'summed_choices_ends.fig')
+                saveas(figure(6),'inst_CR_lb10.fig')
+%                 saveas(figure(7),'speed_heatmap.jpg')
+                saveas(figure(7),'speed_time.fig')
+%                 save('inst_CR_lb10.mat','inst_choice_ratio')
+%                 save('inst_IR_lb10.mat','inst_income_ratio')
+%                 save('cps_pre.mat','cps_pre')
+                save('choice_order.mat','choice_order')
+                save('reward_order.mat','reward_order')
                 close all
-                keyboard
-            elseif save_fig == 1 && exist('speed_time.jpg') == 2
+                pause(60)
+            elseif save_fig == 1 && exist('speed_time.fig') == 2
                 fig_count = 0;
                 keyboard
                 close all
@@ -282,10 +335,29 @@ function [] = plotting_PIs(save_fig)
         list = intersect(list1,list2);
 %         keyboard
     end
+    
+%     keyboard
+    
+    figure(599)
+    ax = polaraxes;
+    for k = 1:length(ave_post_choice_ratios)
+        t = deg2rad(ave_post_choice_ratios(k));
+        polarplot(ax,[t;t],[0;1],'Color','b')
+        hold on
+    end
+    ax.ThetaLim = [0 90];
+    
     marker_colors = [1,0,0;0,1,0];
     col_pairs = [1,2];
-    figure(100)
+    figure(600)
     scattered_dot_plot(transpose(pis(:, list)),100,1,4,8,marker_colors,1,col_pairs,[0.75,0.75,0.75],[{'PI - pre reward'},{'PI - post reward (OCT)'}],1,[0.35,0.35,0.35]);
+    
+    cd(expt_name)
+    
+    save('ave_CR.mat','ave_post_choice_ratios')
+    save('ave_IR.mat','ave_post_income_ratios')
+    save('ave_CR_pre.mat','ave_pre_choice_ratios')
+    
     % 
     % figure(101)
     % scattered_dot_plot(transpose(cpms(1,list)),101,1,4,8,marker_colors(1,:),1,[],[0.75,0.75,0.75],[{'choices per minute'}],1,[0.35,0.35,0.35]);
