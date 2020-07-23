@@ -51,7 +51,7 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
 
     choice_order = [] ;
     reward_order = [];
-    for i = 2:length(summed_choices_ends)
+    for i = 2:length(summed_choices_ends)-1
         if summed_choices_ends(i-1) ~= summed_choices_ends(i)
             if summed_M_choices_ends(i-1) ~= summed_M_choices_ends(i)
                 choice_order(length(choice_order)+1) = 1;

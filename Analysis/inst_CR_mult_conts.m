@@ -110,7 +110,7 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
     plot(pre_sum+1 : pre_sum + length(inst_choice_ratio),inst_choice_ratio,'LineWidth',4,'Color','b')
     hold on
     if protocol_100_0 ~= 1 
-        plot(inst_income_ratio,'LineWidth',4,'Color','k')
+%         plot(inst_income_ratio,'LineWidth',4,'Color','k')
         if protocol_100_0 == 2
             plot(pre_sum+1:pre_sum + length(choice_order),ones(1,length(choice_order))*ave_reward_ratio,'LineWidth',6,'Color','k')
         elseif protocol_100_0 == 3
@@ -121,4 +121,23 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
         plot(pre_sum+1:pre_sum + length(choice_order),ones(1,length(choice_order))*90,'LineWidth',6,'Color','k')
     end
     plot(pre_sum+1:pre_sum + length(choice_order),ones(1,length(choice_order))*ave_choice_ratio,'LineWidth',6,'Color','r')
+    for r = 1:length(reward_order)
+        if choice_order(r) == 2
+            if reward_order(r) == 2
+                plot([r,r],[92,97],'Color',[84/256,174/256,0],'LineWidth',4)
+            else
+                plot([r,r],[92,94],'Color',[84/256,174/256,0],'LineWidth',4)
+            end
+        else
+            if reward_order(r) == 1
+                plot([r,r],[-7,-2],'Color',[242/256,174/256,21/256],'LineWidth',4)
+            else
+                plot([r,r],[-4,-2],'Color',[242/256,174/256,21/256],'LineWidth',4)
+            end
+        end
+    end
+    box off
+    axis off
+    ylim([-7,97])
+    keyboard
 end

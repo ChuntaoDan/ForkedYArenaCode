@@ -42,6 +42,8 @@ function [] = plotting_PIs(save_fig,lookback)
         
         if exist('protocol_100_0') == 0
             no_prot_in_expt = 1;
+        else
+            no_prot_in_expt = 0;
         end
 
         for cond_n = 1:length(conds)
@@ -161,7 +163,7 @@ function [] = plotting_PIs(save_fig,lookback)
                     end 
                     cc = 0;
                     timestamps_summed = [];
-                    for tt  = cps(min(find(cps>cont_switch)):end)
+                    for tt  = cps(min(find(cps>cont_switch)):end-1)
                         no_match = 1;
                         kk = 0;
                         while no_match == 1
@@ -190,35 +192,35 @@ function [] = plotting_PIs(save_fig,lookback)
 % 
 
             % PLOTTING odor crossings
-            figure (fig_count+1)
-            hold on
-            fig_count = fig_count+1
-            for tt  = cps(2:end)
-                no_match = 1;
-                kk = 0;
-                while no_match == 1
-                    kk = kk+1;
-                    if sum(x_y_time_color.color(tt-kk,:) == M_A_Color )==3 ||sum(x_y_time_color.color(tt-kk,:) == M_O_Color )==3
-                        dot_color = M_A_Color;
-                        no_match = 0;
-                        cc = cc+1; 
-                        timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
-                        scatter(timestamps_summed(cc),1,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
-                    elseif sum(x_y_time_color.color(tt-kk,:) == O_A_Color)==3 ||sum(x_y_time_color.color(tt-kk,:) == O_M_Color)==3
-                        dot_color = O_A_Color;
-                        no_match = 0;
-                        cc = cc+1; 
-                        timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
-                        scatter(timestamps_summed(cc),2,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
-                    end 
-                end    
-%                 cc = cc+1; 
-%                 timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
-%                 scatter(timestamps_summed(cc),460,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
-%                         scatter(timestamps_summed(cc),1,100,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
-
-            end
-            hold off
+%             figure (fig_count+1)
+%             hold on
+%             fig_count = fig_count+1
+%             for tt  = cps(2:end-1)
+%                 no_match = 1;
+%                 kk = 0;
+%                 while no_match == 1
+%                     kk = kk+1;
+%                     if sum(x_y_time_color.color(tt-kk,:) == M_A_Color )==3 ||sum(x_y_time_color.color(tt-kk,:) == M_O_Color )==3
+%                         dot_color = M_A_Color;
+%                         no_match = 0;
+%                         cc = cc+1; 
+%                         timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
+%                         scatter(timestamps_summed(cc),1,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
+%                     elseif sum(x_y_time_color.color(tt-kk,:) == O_A_Color)==3 ||sum(x_y_time_color.color(tt-kk,:) == O_M_Color)==3
+%                         dot_color = O_A_Color;
+%                         no_match = 0;
+%                         cc = cc+1; 
+%                         timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
+%                         scatter(timestamps_summed(cc),2,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
+%                     end 
+%                 end    
+% %                 cc = cc+1; 
+% %                 timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
+% %                 scatter(timestamps_summed(cc),460,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
+% %                         scatter(timestamps_summed(cc),1,100,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
+% 
+%             end
+%             hold off
             [odor_crossing] = odor_crossings(region_at_time,air_arm,right_left,timestamps);
 
             figure(fig_count+1)
@@ -278,7 +280,7 @@ function [] = plotting_PIs(save_fig,lookback)
             [speed,speed_tA,fig_count] = Calc_Speed(xy_no_minus_ones,timestamps_no_minus_ones,x_y_time_color.time,fig_count)
             hold on
 
-            for tt  = cps(2:end)
+            for tt  = cps(2:end-1)
                 no_match = 1;
                 kk = 0;
                 while no_match == 1
@@ -333,7 +335,7 @@ function [] = plotting_PIs(save_fig,lookback)
         list1 = find(isnan(pis(1,:)) ~= 1);
         list2 = find(isnan(pis(2,:))~= 1);
         list = intersect(list1,list2);
-%         keyboard
+        keyboard
     end
     
 %     keyboard
