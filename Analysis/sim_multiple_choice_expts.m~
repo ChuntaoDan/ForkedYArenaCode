@@ -35,12 +35,10 @@ nC1 = [];
 nC2 = [];
 nI1 = [];
 nI2 = [];
-I_list = [];
 I1_list = [];
 I2_list = [];
 C1_list = [];
 C2_list = [];
-C_list = [];
 v1 = [];
 v2 = [];
 count = 0;
@@ -63,7 +61,7 @@ end
 
 
 %%
-if exist('C1_list') == 1 && isempty(C1_list) ~= 1
+if exist('C1_list') == 1 
     % p(staying|Reward)
 
 
@@ -175,15 +173,15 @@ else
         t_num_trials = 0;
         for j = 2:240
             t_num_trials = t_num_trials + 1;
-            if C_list(i,j-1) == 1
-                if I_list(i,j-1) == 1
-                    if C_list(i,j) == 1
+            if C1_list(i,j-1) == 1
+                if I1_list(i,j-1) == 1
+                    if C1_list(i,j) == 1
                         n_staying_g_reward = n_staying_g_reward + 1;
                     end
                 end
-            elseif C_list(i,j-1) == 2  
-                if I_list(i,j-1) == 2
-                    if C_list(i,j) == 2
+            elseif C2_list(i,j-1) == 1  
+                if I2_list(i,j-1) == 1
+                    if C2_list(i,j) == 1
                         n_staying_g_reward = n_staying_g_reward + 1;
                     end
                 end
@@ -203,8 +201,8 @@ else
         t_num_trials = 0;
         for j = 2:240
             t_num_trials = t_num_trials + 1;
-            if C_list(i,j-1) == 1
-                if I_list(i,j-1) == 0
+            if C1_list(i,j-1) == 1
+                if I1_list(i,j-1) == 0
                     if C_list(i,j) == 1
                         n_staying_g_Nreward = n_staying_g_Nreward + 1;
                     end
@@ -271,7 +269,7 @@ else
         p_switching_g_reward(i) = n_switching_g_reward/t_num_trials;
     
     end
-end
+
 %% SAVING
 if strategy_num == 1
     filename = sprintf('Strategy%d_allSims_probs.mat',strategy_num)

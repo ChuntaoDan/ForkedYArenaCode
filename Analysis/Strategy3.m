@@ -137,20 +137,20 @@ for nb = 1:nblocks
             if length(I1_v_list) <= window_trials
 %                     v1(nt+1) = mean(I1_v_list);
 
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:length(I1_v_list)]+1)/window_trials)./exp(1)).*I1_v_list);
-                else
+                v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:length(I1_v_list)]+1)/window_trials)./exp(1)).*I1_v_list);
+            else
 %                     v1(nt+1) = mean(I1_v_list(end-window_trials : end));
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1)).*I1_v_list(end-window_trials+1:end));
-                end
-                if length(I2_v_list) <= window_trials
+                v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1)).*I1_v_list(end-window_trials+1:end));
+            end
+            if length(I2_v_list) <= window_trials
 %                     v2(nt+1) = mean(I2_v_list);
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:length(I2_v_list)]+1)/window_trials)./exp(1)).*I2_v_list);
-               
-                else
+                v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:length(I2_v_list)]+1)/window_trials)./exp(1)).*I2_v_list);
+
+            else
 %                     v2(nt+1) = mean(I2_v_list(end-window_trials : end));
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1)).*I2_v_list(end-window_trials+1:end));
-               
-                end
+                v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1)).*I2_v_list(end-window_trials+1:end));
+
+            end
          elseif v2(((nb-1)*ntrials) + nt)>v1(((nb-1)*ntrials) + nt)
              nC2 = nC2 + 1;
                  C1_list(((nb-1)*ntrials) + nt) = 0;
