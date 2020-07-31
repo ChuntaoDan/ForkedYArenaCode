@@ -198,7 +198,7 @@ cd(tempPath1);
 handles.expStartTime = datestr(now,30);
 
 dataPath = [tempPath1, '\', handles.expStartTime, '_',handles.rig, '_',...
-    'Cam', num2str(1-1),'GR64f_9_smallY'];
+    'Cam', num2str(1-1),'GR64f_8_smallY'];
 
 if ~exist(dataPath, 'dir')
     tempPath2 = dataPath;

@@ -1,4 +1,4 @@
-function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count) 
+function [xy,count,snapshot,ave_background,more_count, less_count,delete_vidobj_count] = tracking_live(xy,count,vidobj2,snapshot,ave_background,more_count, less_count,delete_vidobj_count) 
     
     try
     %         vidobj2.LoggingMode = 'disk&memory';
@@ -21,11 +21,11 @@ function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_li
         elseif length(large) > 1
             if more_count < 10
                 warning('more  than 1 oject IDed')
-                more_count = more_count+1
-                xy(:,count) = -1;
+                more_count = more_count+1;
+                xy(1:2,count) = -1;
             else
                 for pics = 1:10
-                    background(:,:,pics) = getsnapshot(vidobj2);
+                    background(:,:,pics) = getdata(vidobj2,1);
                     % imshow(background(:,:,pics))
                     if pics == 1
                         sum_background = (1/10)*background(:,:,pics);
@@ -41,16 +41,16 @@ function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_li
 %                 flushdata(vidobj2)
 %                 delete(vidobj2)
                 more_count = 0;
-                xy(:,count) = -1;
+                xy(1:2,count) = -1;
             end    
         else 
             if less_count < 10
-                warning('more  than 1 oject IDed')
-                less_count = less_count+1
-                xy(:,count) = -1;
+                warning('less  than 1 oject IDed')
+                less_count = less_count+1;
+                xy(1:2,count) = -1;
             else
                 for pics = 1:10
-                    background(:,:,pics) = getsnapshot(vidobj2);
+                    background(:,:,pics) = getdata(vidobj2,1);
                     % imshow(background(:,:,pics))
                     if pics == 1
                         sum_background = (1/10)*background(:,:,pics);
@@ -66,7 +66,7 @@ function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_li
 %                 flushdata(vidobj2)
 %                 delete(vidobj2)
                 less_count = 0; 
-                xy(:,count) = -1;
+                xy(1:2,count) = -1;
             end
     %     x and y coordinates of the fly for each snapshot
     %     Here you can incorporate a case structure to control the Reward and
@@ -77,4 +77,12 @@ function [xy,count,snapshot,ave_background,more_count, less_count] = tracking_li
     catch
         warning('TRACKING NOT WORKING!!!!')
         pause(0.1)
+        delete(vidobj2);
+        delete_vidobj_count =delete_vidobj_count +1
+        clear('vidobj2');
+        vidobj2 = videoinput('pointgrey',2);
+            triggerconfig(vidobj2, 'manual');
+            vidobj2.FramesPerTrigger = inf; 
+            start(vidobj2);
+            trigger(vidobj2) 
     end 
