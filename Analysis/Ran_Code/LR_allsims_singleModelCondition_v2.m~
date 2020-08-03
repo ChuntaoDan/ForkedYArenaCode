@@ -6,24 +6,7 @@ load(load_filename);
 % converting choice matrix to a choice vector for ease of referencing
 choice_order = [];
 reward_order = [];
-reward_order_2 = [];
-for a = 1:2100
-    choice_order = cat(2,choice_order,C1_list(a,:));
-    reward_order = cat(2,reward_order,I1_list(a,:));
-end
 
-z_list = find(choice_order == 0);
-choice_order(z_list) = 2;
-
-for a = 1:2100
-    reward_order_2 = cat(2,reward_order_2,I2_list(a,:));
-end
-
-for b = 1:length(reward_order)
-    if reward_order(b) == 0 && reward_order_2(b) == 1
-        reward_order(b) = 2;
-    end
-end  
 
 CO = choice_order;
 RO = reward_order;
@@ -122,18 +105,9 @@ for simnum = 1:2100
     end
 end    
     
-<<<<<<< HEAD
-%     figure(11)
-%     subplot (2,3,H)
-%     plot(Pc(H,:),'g')
-%     hold on
-%     plot(P2(H,:),'k')
-%     plot(Y-1,'or')
-=======
     figure(11)
     subplot (2,3,H)
     plot(Pc(H,:),'g')
     hold on
     plot(P2(H,:),'k')
     plot(Y-1,'or')
->>>>>>> 9d2760640073c206b4c5a280cc37700186926f0c

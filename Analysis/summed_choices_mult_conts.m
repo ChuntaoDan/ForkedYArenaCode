@@ -66,20 +66,20 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
             if summed_M_choices_ends(i-1) ~= summed_M_choices_ends(i)
                 choice_order(length(choice_order)+1) = 1;
                 if protocol_100_0 ~= 1
-%                     if reward(2,i-1) == 1
-%                         reward_order(length(choice_order)) = 1;
-%                     elseif reward(2,i-1) == 0
-%                         reward_order(length(choice_order)) = 0;
-%                     end
+                    if reward(2,length(choice_order)) == 1
+                        reward_order(length(choice_order)) = 1;
+                    elseif reward(2,length(choice_order)) == 0
+                        reward_order(length(choice_order)) = 0;
+                    end
                 end    
             elseif summed_O_choices_ends(i-1) ~= summed_O_choices_ends(i)
                 choice_order(length(choice_order)+1) = 2;
                 if protocol_100_0 ~= 1
-%                     if reward(1,i-1) == 1
-%                       reward_order(length(choice_order)) = 2;
-%                     elseif reward(1,i-1) == 0
-%                         reward_order(length(choice_order)) = 0;
-%                     end 
+                    if reward(1,length(choice_order)) == 1
+                      reward_order(length(choice_order)) = 2;
+                    elseif reward(1,length(choice_order)) == 0
+                        reward_order(length(choice_order)) = 0;
+                    end 
                 end    
             end
         end    
@@ -89,35 +89,35 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
     num_M_rewarded = 0;
     % HACKY CODE TO CALCULATE AVE_REWARD_SLOPE BECAUSE reward was
     % incorrectly saved when acquiring data
-    if conts > 1
-        a_O = sum(reward(1,:));
-        b_O = sum(baiting(1,:));
-        c_O = 0;
-        for i = 1:length(baiting)-1
-            if baiting(1,i:i+1) == [0,1]
-            c_O = c_O + 1;
-            end
-        end
-        num_O_rewarded = a_O -b_O + c_O
-        a_M = sum(reward(2,:));
-        b_M = sum(baiting(2,:));
-        c_M = 0;
-        for i = 1:length(baiting)-1
-            if baiting(2,i:i+1) == [0,1]
-            c_M = c_M + 1;
-            end
-        end
-        num_M_rewarded = a_M -b_M + c_M
-        
-           
-            
-
-    end
+%     if conts > 1
+%         a_O = sum(reward(1,:));
+%         b_O = sum(baiting(1,:));
+%         c_O = 0;
+%         for i = 1:length(baiting)-1
+%             if baiting(1,i:i+1) == [0,1]
+%             c_O = c_O + 1;
+%             end
+%         end
+%         num_O_rewarded = a_O -b_O + c_O
+%         a_M = sum(reward(2,:));
+%         b_M = sum(baiting(2,:));
+%         c_M = 0;
+%         for i = 1:length(baiting)-1
+%             if baiting(2,i:i+1) == [0,1]
+%             c_M = c_M + 1;
+%             end
+%         end
+%         num_M_rewarded = a_M -b_M + c_M
+%         
+%            
+%             
+% 
+%     end
 %     
-%     num_O_rewarded = length(find(reward_order == 2));
-%     num_M_rewarded = length(find(reward_order == 1));
-     ave_reward_slope = (num_O_rewarded/num_M_rewarded);
-     
+    num_O_rewarded = length(find(reward_order == 2));
+    num_M_rewarded = length(find(reward_order == 1));
+    ave_reward_slope = (num_O_rewarded/num_M_rewarded);
+
 % This is how lines will be defined for experiments where first set of
 % trials involve no reward and second set of trials have OCT100:MCH0
     if protocol_100_0 == 1
@@ -135,17 +135,30 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
     % trials involve no reward and second set of trials have OCT80:MCH20
     elseif protocol_100_0 == 2
         if conts == 1
-            line1_x1 = 0;
-            line1_x2 = summed_M_choices_ends(end);
-            line1_x = line1_x1:line1_x2;
-            line1_y = line1_x;
+            if ave_reward_slope >= 1
+                line1_y1 = 0;
+                line1_y2 = summed_O_choices_ends(end);
+                line1_y = line1_y1:line1_y2;
+                line1_x = (([1:length(line1_y)])/ave_reward_slope);
+            elseif ave_reward_slope < 1  
+                line1_x1 = 0;
+                line1_x2 = summed_M_choices_ends(end);
+                line1_x = line1_x1:line1_x2;
+                line1_y = (([1:length(line1_x)])*ave_reward_slope);
+            end
         elseif conts > 1    
-            line1_y1 = pre_sumO;
-            line1_y2 = summed_O_choices_ends(end);
-            line1_y = line1_y1 : line1_y2;
-            line1_x = (([1:length(line1_y)])/ave_reward_slope) + pre_sumM;
-
-        
+            if ave_reward_slope >= 1
+                line1_y1 = pre_sumO;
+                line1_y2 = summed_O_choices_ends(end);
+                line1_y = line1_y1 : line1_y2;
+                line1_x = (([1:length(line1_y)])/ave_reward_slope) + pre_sumM;
+            elseif ave_reward_slope < 1
+                line1_x1 = pre_sumM;
+                line1_x2 = summed_M_choices_ends(end);
+                line1_x = line1_x1:line1_x2;
+                line1_y = (([1:length(line1_x)])*ave_reward_slope) + pre_sumO;
+            end    
+        end
     % This is how lines will be defined for experiments where first set of
     % trials involve no reward and second set of trials have OCT60:MCH40
     elseif protocol_100_0 == 3 
@@ -160,7 +173,6 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
         line2_y = line1_y1 : line1_y2;
         line2_x = (([1:length(line1_y)])/ave_reward_slope) + pre_sumM;
     end    
-
     if conts == 1
         figure(fig_count+1)
         gotofig = fig_count+1;

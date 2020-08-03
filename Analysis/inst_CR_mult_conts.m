@@ -36,46 +36,44 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
 
     num_O_rewarded = 0;
     num_M_rewarded = 0;
-    % HACKY CODE TO CALCULATE AVE_REWARD_SLOPE BECAUSE reward was
-    % incorrectly saved when acquiring data
-    if conts > 1
-        a_O = sum(reward(1,:));
-        b_O = sum(baiting(1,:));
-        c_O = 0;
-        for i = 1:length(baiting)-1
-            if baiting(1,i:i+1) == [0,1]
-            c_O = c_O + 1;
-            end
-        end
-        num_O_rewarded = a_O -b_O + c_O
-        a_M = sum(reward(2,:));
-        b_M = sum(baiting(2,:));
-        c_M = 0;
-        for i = 1:length(baiting)-1
-            if baiting(2,i:i+1) == [0,1]
-            c_M = c_M + 1;
-            end
-        end
-        num_M_rewarded = a_M -b_M + c_M
+%     % HACKY CODE TO CALCULATE AVE_REWARD_SLOPE BECAUSE reward was
+%     % incorrectly saved when acquiring data
+%     if conts > 1
+%         a_O = sum(reward(1,:));
+%         b_O = sum(baiting(1,:));
+%         c_O = 0;
+%         for i = 1:length(baiting)-1
+%             if baiting(1,i:i+1) == [0,1]
+%             c_O = c_O + 1;
+%             end
+%         end
+%         num_O_rewarded = a_O -b_O + c_O
+%         a_M = sum(reward(2,:));
+%         b_M = sum(baiting(2,:));
+%         c_M = 0;
+%         for i = 1:length(baiting)-1
+%             if baiting(2,i:i+1) == [0,1]
+%             c_M = c_M + 1;
+%             end
+%         end
+%         num_M_rewarded = a_M -b_M + c_M
+%       end
         
-           
+        num_O_rewarded = length(find(reward_order == 2));
+        num_M_rewarded = length(find(reward_order == 1));
+        ave_reward_slope = (num_O_rewarded/num_M_rewarded);
             
-
-    end
     
-    ave_reward_ratio = rad2deg(atan(num_O_rewarded/num_M_rewarded));
-    if conts == 1
-        ave_reward_ratio = 45;
-    end    
+    ave_reward_ratio = rad2deg(atan(ave_reward_slope));
+%     if conts == 1
+%         ave_reward_ratio = 45;
+%     end    
     
     inst_income_ratio = [];
     if protocol_100_0 ~= 1 
         
-        for j = 1:length(reward_order)
-            if conts == 1
-                inst_income_ratio(j) = 45;
-                continue   
-            elseif j>0 && j< lookback    
+        for j = 1:length(reward_order) 
+            if j>0 && j< lookback    
                 num_O_rewards = length(find(reward_order(1:j) == 2));
                 num_M_rewards = length(find(reward_order(1:j) == 1));
                 if num_O_rewards ~= 0 && num_M_rewards ~= 0
@@ -106,11 +104,15 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
     else
         figure(gotofig)
     end
-    
+
     plot(pre_sum+1 : pre_sum + length(inst_choice_ratio),inst_choice_ratio,'LineWidth',4,'Color','b')
     hold on
     if protocol_100_0 ~= 1 
+<<<<<<< HEAD
 %         plot(inst_income_ratio,'LineWidth',4,'Color','k')
+=======
+        plot(pre_sum+1:pre_sum + length(choice_order),inst_income_ratio,'LineWidth',4,'Color','k')
+>>>>>>> 9d2760640073c206b4c5a280cc37700186926f0c
         if protocol_100_0 == 2
             plot(pre_sum+1:pre_sum + length(choice_order),ones(1,length(choice_order))*ave_reward_ratio,'LineWidth',6,'Color','k')
         elseif protocol_100_0 == 3
