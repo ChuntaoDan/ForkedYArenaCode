@@ -101,7 +101,13 @@ for simnum = 1:10:2100
         LossLOU_mat{simnum} = LossLOU;
         
 
-
+        
     end
 end    
     
+    figure(11)
+    subplot (2,3,H)
+    plot(Pc(H,:),'g')
+    hold on
+    plot(P2(H,:),'k')
+    plot(Y-1,'or')
