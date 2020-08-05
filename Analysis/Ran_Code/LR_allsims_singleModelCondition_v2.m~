@@ -4,8 +4,8 @@ H_vec_max = input('enter max number of trials back to use in model')
 load(load_filename);
 
 % converting choice matrix to a choice vector for ease of referencing
-choice_order = [];
-reward_order = [];
+choice_order = C_list;
+reward_order = I_list;
 
 
 CO = choice_order;
@@ -15,10 +15,10 @@ Pc_mat = {};
 P2_mat = {};
 LossLOU_mat = {};
 
-for simnum = 1:2100
+for simnum = 1:10:2100
     simnum
-    choice_order = CO(((simnum-1)*240)+1 : simnum*240);
-    reward_order = RO(((simnum-1)*240)+1 : simnum*240);
+    choice_order = CO(simnum,:);
+    reward_order = RO(simnum,:);
     
     % n0=length(cps_pre);
     n0=1;

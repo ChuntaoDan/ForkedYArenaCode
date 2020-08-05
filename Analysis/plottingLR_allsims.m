@@ -1,3 +1,5 @@
+colvec = color_vec = cbrewer('qual','Dark2',10,'cubic');
+
 figure
 hold on
 Pc_1_mat = [];
@@ -21,7 +23,7 @@ Pc_18_mat = [];
 Pc_19_mat = [];
 Pc_20_mat = [];
 
-for d = 2:15
+for d = 1:2100
     Pc_1_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(1,:);
     Pc_2_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(2,:);
     Pc_3_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(3,:);
@@ -32,62 +34,95 @@ for d = 2:15
     Pc_8_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(8,:);
     Pc_9_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(9,:);
     Pc_10_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(10,:);
-    Pc_11_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(11,:);
-    Pc_12_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(12,:);
-    Pc_13_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(13,:);
-    Pc_14_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(14,:);
-    Pc_15_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(15,:);
-    Pc_16_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(16,:);
-    Pc_17_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(17,:);
-    Pc_18_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(18,:);
-    Pc_19_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(19,:);
-    Pc_20_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(20,:);
-
+%     Pc_11_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(11,:);
+%     Pc_12_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(12,:);
+%     Pc_13_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(13,:);
+%     Pc_14_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(14,:);
+%     Pc_15_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(15,:);
+%     Pc_16_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(16,:);
+%     Pc_17_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(17,:);
+%     Pc_18_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(18,:);
+%     Pc_19_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(19,:);
+%     Pc_20_mat(d,1:length(Pc_mat{d}(1,:))) = Pc_mat{d}(20,:);
+% 
 
 end  
+    
+meanPc(:,1) = (mean(Pc_1_mat,2));
+meanPc(:,2) = (mean(Pc_2_mat(:,1:238),2));
+meanPc(:,3) = (mean(Pc_3_mat(:,1:237),2));
+meanPc(:,4) = (mean(Pc_4_mat(:,1:236),2));
+meanPc(:,5) = (mean(Pc_5_mat(:,1:235),2));
+meanPc(:,6) = (mean(Pc_6_mat(:,1:234),2));
+meanPc(:,7) = (mean(Pc_7_mat(:,1:233),2));
+meanPc(:,8) = (mean(Pc_8_mat(:,1:232),2));
+meanPc(:,9) = (mean(Pc_9_mat(:,1:231),2));
+meanPc(:,10) = (mean(Pc_10_mat(:,1:230),2));
 
-figure
-hold on
+plot_distribution([1:10],meanPc,'Color',colvec(5,:))
 
-wi_mat_choices_20 = [];
-wi_mat_rewards_20 = [];
-wi_mat_choices_rewards_20 = [];
+wi_mat_choices_10 = [];
+wi_mat_rewards_10 = [];
+wi_mat_choices_rewards_10 = [];
 
-for d = 4:17
-    wi_mat_choices_20(d,:) = wi_mat{d,20}(2:21,1);
-    wi_mat_rewards_20(d,:) = wi_mat{d,20}(22:41,1);
-    wi_mat_choices_rewards_20(d,:) = wi_mat{d,20}(42:61,1);
+for d = 1:2100
+    wi_mat_choices_10(d,:) = wi_mat{d,10}(2:11,1);
+    wi_mat_rewards_10(d,:) = wi_mat{d,10}(12:21,1);
+    wi_mat_choices_rewards_10(d,:) = wi_mat{d,10}(22:31,1);
 
 end 
 
 figure;
 subplot 311
-plot_distribution([1:20],wi_mat_choices_20(:,1:20),'Color',colvec(5,:))
+plot_distribution([1:10],wi_mat_choices_10(:,1:10),'Color',colvec(5,:))
 subplot 312
-plot_distribution([1:20],wi_mat_rewards_20(:,1:20),'Color',colvec(5,:))
+plot_distribution([1:10],wi_mat_rewards_10(:,1:10),'Color',colvec(5,:))
 subplot 313
-plot_distribution([1:20],wi_mat_choices_rewards_20(:,1:20),'Color',colvec(5,:))
+plot_distribution([1:10],wi_mat_choices_rewards_10(:,1:10),'Color',colvec(5,:))
 
 
-for d = 2:15
-    LossLOU(d-1,1) = LossLOU_mat{d}(1);
-    LossLOU(d-1,2) = LossLOU_mat{d}(2)
-    LossLOU(d-1,3) = LossLOU_mat{d}(3)
-    LossLOU(d-1,4) = LossLOU_mat{d}(4)
-    LossLOU(d-1,5) = LossLOU_mat{d}(5)
-    LossLOU(d-1,6) = LossLOU_mat{d}(6)
-    LossLOU(d-1,7) = LossLOU_mat{d}(7)
-    LossLOU(d-1,8) = LossLOU_mat{d}(8)
-    LossLOU(d-1,9) = LossLOU_mat{d}(9)
-    LossLOU(d-1,10) = LossLOU_mat{d}(10)
-    LossLOU(d-1,11) = LossLOU_mat{d}(11)
-    LossLOU(d-1,12) = LossLOU_mat{d}(12)
-    LossLOU(d-1,13) = LossLOU_mat{d}(13)
-    LossLOU(d-1,14) = LossLOU_mat{d}(14)
-    LossLOU(d-1,15) = LossLOU_mat{d}(15)
-    LossLOU(d-1,16) = LossLOU_mat{d}(16)
-    LossLOU(d-1,17) = LossLOU_mat{d}(17)
-    LossLOU(d-1,18) = LossLOU_mat{d}(18)
-    LossLOU(d-1,19) = LossLOU_mat{d}(19)
-    LossLOU(d-1,20) = LossLOU_mat{d}(20)
+
+wi_mat_choices_3 = [];
+wi_mat_rewards_3 = [];
+wi_mat_choices_rewards_3 = [];
+
+for d = 1:2100
+    wi_mat_choices_3(d,:) = wi_mat{d,3}(2:4,1);
+    wi_mat_rewards_3(d,:) = wi_mat{d,3}(5:7,1);
+    wi_mat_choices_rewards_3(d,:) = wi_mat{d,3}(8:10,1);
+
+end 
+
+figure;
+subplot 311
+plot_distribution([1:3],wi_mat_choices_3(:,1:3),'Color',colvec(5,:))
+subplot 312
+plot_distribution([1:3],wi_mat_rewards_3(:,1:3),'Color',colvec(5,:))
+subplot 313
+plot_distribution([1:3],wi_mat_choices_rewards_3(:,1:3),'Color',colvec(5,:))
+
+
+for d = 1:2100
+    LossLOU(d,1) = LossLOU_mat{d}(1);
+    LossLOU(d,2) = LossLOU_mat{d}(2);
+    LossLOU(d,3) = LossLOU_mat{d}(3);
+    LossLOU(d,4) = LossLOU_mat{d}(4);
+    LossLOU(d,5) = LossLOU_mat{d}(5);
+    LossLOU(d,6) = LossLOU_mat{d}(6);
+    LossLOU(d,7) = LossLOU_mat{d}(7);
+    LossLOU(d,8) = LossLOU_mat{d}(8);
+    LossLOU(d,9) = LossLOU_mat{d}(9);
+    LossLOU(d,10) = LossLOU_mat{d}(10);
+%     LossLOU(d-1,11) = LossLOU_mat{d}(11);
+%     LossLOU(d-1,12) = LossLOU_mat{d}(12);
+%     LossLOU(d-1,13) = LossLOU_mat{d}(13);
+%     LossLOU(d-1,14) = LossLOU_mat{d}(14);
+%     LossLOU(d-1,15) = LossLOU_mat{d}(15);
+%     LossLOU(d-1,16) = LossLOU_mat{d}(16);
+%     LossLOU(d-1,17) = LossLOU_mat{d}(17);
+%     LossLOU(d-1,18) = LossLOU_mat{d}(18);
+%     LossLOU(d-1,19) = LossLOU_mat{d}(19);
+%     LossLOU(d-1,20) = LossLOU_mat{d}(20);
 end    
+
+plot_distribution([1:10],LossLOU,'Color',colvec(5,:))

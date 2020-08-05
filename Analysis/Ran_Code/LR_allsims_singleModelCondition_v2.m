@@ -15,10 +15,10 @@ Pc_mat = {};
 P2_mat = {};
 LossLOU_mat = {};
 
-for simnum = 1:2100
+for simnum = 1:10:2100
     simnum
-    choice_order = CO(((simnum-1)*240)+1 : simnum*240);
-    reward_order = RO(((simnum-1)*240)+1 : simnum*240);
+    choice_order = CO(simnum,:);
+    reward_order = RO(simnum,:);
     
     % n0=length(cps_pre);
     n0=1;

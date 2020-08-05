@@ -19,8 +19,8 @@ I_list = [];
 C_list = [];
 v1 = [0];
 v2 = [0];
-v1_list = [-1];
-v2_list = [-1];
+v1_list = [];
+v2_list = [];
 exp_w_list = [];
 
 
@@ -36,6 +36,8 @@ for nb = 1:nblocks
         end
         
      if v1(((nb-1)*ntrials) + nt) == v2(((nb-1)*ntrials) + nt)
+         v1_list = [];
+         v2_list = [];
          if rand(1,1) <0.5
             nC1 = nC1 + 1;
             C_list(((nb-1)*ntrials) + nt) = 1;
@@ -50,7 +52,7 @@ for nb = 1:nblocks
             elseif cI1 == 0 && r1 >= pR1
                 I_list(((nb-1)*ntrials) + nt) = 0;
             end
-            if cI2 ==0 && r2 <pR2
+            if cI2 == 0 && r2 <pR2
                 cI2 = 1;
             end
             cI1 = 0;
@@ -58,42 +60,42 @@ for nb = 1:nblocks
 %                     v1(nt+1) = mean(I1_v_list);
                 for ct = 1:length(I_list)
                     if I_list(ct) == 1
-                        v1_list(ct) = 1;
+                        v1_list(length(v1_list)+1) = 1;
                     elseif I_list(ct) == 2
-                        v1_list(ct) = -1;
+                        v1_list(length(v1_list)+1) = -1;
                     elseif I_list(ct) ==  0
                         if C_list(ct) == 1
-                            v1_list(ct) = 0;
+                            v1_list(length(v1_list)+1) = 0;
                         else
-                            v1_list(ct) = -1;
+                            v1_list(length(v1_list)+1) = -1;
                         end
                     end 
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
-                v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v1_list(valid_els));
+                v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v1_list(valid_els));
             else
 %                     v1(nt+1) = mean(I1_v_list(end-window_trials : end));
                 for ct = length(I_list) - window_trials + 1:length(I_list)
                     if I_list(ct) == 1
-                        v1_list(ct) = 1;
+                        v1_list(length(v1_list)+1) = 1;
                     elseif I_list(ct) == 2
-                        v1_list(ct) = -1;
+                        v1_list(length(v1_list)+1) = -1;
                     elseif I_list(ct) ==  0
-                        if C_list(ct) == 1
-                            v1_list(ct) = 0;
+                        if C_list(ct)+1) == 1
+                            v1_list(length(v1_list)+1) = 0;
                         else
-                            v1_list(ct) = -1;
+                            v1_list(length(v1_list)+1) = -1;
                         end
                     end 
                 end   
                 exp_w_list = exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
                  if length(valid_els) < 3
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
                 else    
-                    keyboard
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
+
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
                  end
             end
             
@@ -101,43 +103,43 @@ for nb = 1:nblocks
 %                     v2(nt+1) = mean(I2_v_list);
                 for ct = 1:length(I_list)
                     if I_list(ct) == 2
-                        v2_list(ct) = 1;
+                        v2_list(length(v1_list)+1) = 1;
                     elseif I_list(ct) == 1
-                        v2_list(ct) = -1;
+                        v2_list(length(v1_list)+1) = -1;
                     elseif I_list(ct) ==  0
                         if C_list(ct) == 2
-                            v2_list(ct) = 0;
+                            v2_list(length(v1_list)+1) = 0;
                         else
-                            v2_list(ct) = -1;
+                            v2_list(length(v1_list)+1) = -1;
                         end
                     end 
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v2_list ~= -1);      
-                v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v2_list(valid_els));
+                v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v2_list(valid_els));
            
             else
 %                     v2(nt+1) = mean(I2_v_list(end-window_trials : end));
                 for ct = length(I_list) - window_trials + 1:length(I_list)
                     if I_list(ct) == 2
-                        v2_list(ct) = 1;
+                        v2_list(length(v1_list)+1) = 1;
                     elseif I_list(ct) == 1
-                        v2_list(ct) = -1;
+                        v2_list(length(v1_list)+1) = -1;
                     elseif I_list(ct) ==  0
                         if C_list(ct) == 2
-                            v2_list(ct) = 0;
+                            v2_list(length(v1_list)+1) = 0;
                         else
-                            v2_list(ct) = -1;
+                            v2_list(length(v1_list)+1) = -1;
                         end
                     end 
                 end   
                 exp_w_list = exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1);     
                 valid_els = find(v2_list ~= -1);      
-                keyboard
+
                 if length(valid_els) < 3
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
                 else    
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
                 end
             end
 
@@ -159,7 +161,7 @@ for nb = 1:nblocks
                  I_list(((nb-1)*ntrials) + nt) = 0;
 
              end
-             if cI1 ==0 && r1 <pR1
+             if cI1 == 0 && r1 <pR1
                  cI1 = 1;
              end
              cI2 = 0;
@@ -180,7 +182,7 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
-                v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v1_list(valid_els));
+                v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v1_list(valid_els));
             else
 %                     v1(nt+1) = mean(I1_v_list(end-window_trials : end));
                 for ct = length(I_list) - window_trials + 1:length(I_list)
@@ -199,10 +201,10 @@ for nb = 1:nblocks
                 exp_w_list = exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
                  if length(valid_els) < 3
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
                 else    
-                    keyboard
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
+
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
                  end
             end
             
@@ -223,8 +225,8 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v2_list ~= -1);  
-                keyboard
-                v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v2_list(valid_els));
+
+                v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v2_list(valid_els));
            
             else
 %                     v2(nt+1) = mean(I2_v_list(end-window_trials : end));
@@ -243,11 +245,11 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1);     
                 valid_els = find(v2_list ~= -1);      
-                keyboard
+
                 if length(valid_els) < 3
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
                 else    
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
                 end
             end
          end
@@ -286,7 +288,7 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
-                v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v1_list(valid_els));
+                v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v1_list(valid_els));
             else
 %                     v1(nt+1) = mean(I1_v_list(end-window_trials : end));
                 for ct = length(I_list) - window_trials + 1:length(I_list)
@@ -305,10 +307,10 @@ for nb = 1:nblocks
                 exp_w_list = exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
                  if length(valid_els) < 3
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
                 else    
 
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
                  end
             end
             
@@ -329,7 +331,7 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v2_list ~= -1);      
-                v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v2_list(valid_els));
+                v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v2_list(valid_els));
            
             else
 %                     v2(nt+1) = mean(I2_v_list(end-window_trials : end));
@@ -350,9 +352,9 @@ for nb = 1:nblocks
                 valid_els = find(v2_list ~= -1);      
 
                 if length(valid_els) < 3
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
                 else    
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
                 end
             end
             
@@ -370,7 +372,7 @@ for nb = 1:nblocks
              elseif cI2 == 0 && r2 >= pR2
                  I_list(((nb-1)*ntrials) + nt) = 0;
              end
-             if cI1 ==0 && r1 <pR1
+             if cI1 == 0 && r1 <pR1
                  cI1 = 1;
              end
              cI2 = 0;
@@ -391,7 +393,7 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
-                v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v1_list(valid_els));
+                v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v1_list(valid_els));
             else
 %                     v1(nt+1) = mean(I1_v_list(end-window_trials : end));
                 for ct = length(I_list) - window_trials + 1:length(I_list)
@@ -410,10 +412,10 @@ for nb = 1:nblocks
                 exp_w_list = exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1);     
                 valid_els = find(v1_list ~= -1);      
                  if length(valid_els) < 3
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v1_list(valid_els));
                 else    
-                    keyboard
-                    v1(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
+
+                    v1(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v1_list(valid_els(end-window_trials+1:end)));
                  end
             end
             
@@ -434,7 +436,7 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:length(I_list)]+1)/window_trials)./exp(1);     
                 valid_els = find(v2_list ~= -1);      
-                v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(valid_els)).*v2_list(valid_els));
+                v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(valid_els)).*v2_list(valid_els));
            
             else
 %                     v2(nt+1) = mean(I2_v_list(end-window_trials : end));
@@ -453,11 +455,11 @@ for nb = 1:nblocks
                 end   
                 exp_w_list = exp((window_trials - [1:window_trials]+1)/window_trials)./exp(1);     
                 valid_els = find(v2_list ~= -1);      
-                keyboard
+
                 if length(valid_els) < 3
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list(1:length(valid_els))).*v2_list(valid_els));
                 else    
-                    v2(((nb-1)*ntrials) + nt+1) = mean(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
+                    v2(((nb-1)*ntrials) + nt+1) = sum(flip(exp_w_list).*v2_list (valid_els(end-window_trials+1:end)));
                 end
             end
      end        

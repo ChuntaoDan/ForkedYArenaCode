@@ -7,7 +7,7 @@
 % and will include 10 trials for each random set. No set of 3 blocks will 
 % multiple blocks with same rPs - summing up to 2100 expts per strategy.
 
-function [nC1,nC2,nI1,nI2,I1_list,I2_list,C1_list,C2_list,v1,v2] = sim_multiple_choice_expts(strategy_num,version_number,ntrials,nblocks,total_prob_r)
+function [nC1,nC2,nI1,nI2,I1_list,I2_list,C1_list,C2_list,v1,v2,C_list,I_list] = sim_multiple_choice_expts(strategy_num,version_number,ntrials,nblocks,total_prob_r)
 
 if strategy_num == 3
     window_trials = input('enter window_trials');
