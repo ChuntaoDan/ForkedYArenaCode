@@ -49,24 +49,24 @@ end
 figure
 hold on
 
-wi_mat_choices_20 = [];
-wi_mat_rewards_20 = [];
-wi_mat_choices_rewards_20 = [];
+wi_mat_choices_5 = [];
+wi_mat_rewards_5 = [];
+wi_mat_choices_rewards_5 = [];
 
-for d = 4:17
-    wi_mat_choices_20(d,:) = wi_mat{d,20}(2:21,1);
-    wi_mat_rewards_20(d,:) = wi_mat{d,20}(22:41,1);
-    wi_mat_choices_rewards_20(d,:) = wi_mat{d,20}(42:61,1);
+for d = 1:2100
+    wi_mat_choices_5(d,:) = wi_mat{d,5}(2:6,1);
+    wi_mat_rewards_5(d,:) = wi_mat{d,5}(7:11,1);
+    wi_mat_choices_rewards_5(d,:) = wi_mat{d,5}(12:16,1);
 
 end 
 
-figure;
+
 subplot 311
-plot_distribution([1:20],wi_mat_choices_20(:,1:20),'Color',colvec(5,:))
+plot_distribution([1:5],wi_mat_choices_5(:,1:5),'Color',colvec(5,:))
 subplot 312
-plot_distribution([1:20],wi_mat_rewards_20(:,1:20),'Color',colvec(5,:))
+plot_distribution([1:5],wi_mat_rewards_5(:,1:5),'Color',colvec(5,:))
 subplot 313
-plot_distribution([1:20],wi_mat_choices_rewards_20(:,1:20),'Color',colvec(5,:))
+plot_distribution([1:5],wi_mat_choices_rewards_5(:,1:5),'Color',colvec(5,:))
 
 
 for d = 2:15
