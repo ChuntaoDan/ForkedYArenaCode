@@ -81,7 +81,7 @@ subplot 313
 plot_distribution([1:10],wi_mat_choices_rewards_10(:,1:10),'Color',colvec(5,:))
 
 
-<<<<<<< HEAD
+
 
 wi_mat_choices_3 = [];
 wi_mat_rewards_3 = [];
@@ -91,7 +91,18 @@ for d = 1:2100
     wi_mat_choices_3(d,:) = wi_mat{d,3}(2:4,1);
     wi_mat_rewards_3(d,:) = wi_mat{d,3}(5:7,1);
     wi_mat_choices_rewards_3(d,:) = wi_mat{d,3}(8:10,1);
-=======
+end
+
+figure
+subplot 311
+plot_distribution([1:3],wi_mat_choices_3(:,1:3),'Color',colvec(5,:))
+subplot 312
+plot_distribution([1:3],wi_mat_rewards_3(:,1:3),'Color',colvec(5,:))
+subplot 313
+plot_distribution([1:3],wi_mat_choices_rewards_3(:,1:3),'Color',colvec(5,:))
+
+
+
 wi_mat_choices_5 = [];
 wi_mat_rewards_5 = [];
 wi_mat_choices_rewards_5 = [];
@@ -100,18 +111,18 @@ for d = 1:2100
     wi_mat_choices_5(d,:) = wi_mat{d,5}(2:6,1);
     wi_mat_rewards_5(d,:) = wi_mat{d,5}(7:11,1);
     wi_mat_choices_rewards_5(d,:) = wi_mat{d,5}(12:16,1);
->>>>>>> 082b6c139c26158bb5d768527420841216ba232b
-
-end 
+end
 
 
-subplot 311
-<<<<<<< HEAD
-plot_distribution([1:3],wi_mat_choices_3(:,1:3),'Color',colvec(5,:))
+figure
+suplot 311
+plot_distribution([1:5],wi_mat_choices_5(:,1:5),'Color',colvec(5,:))
 subplot 312
-plot_distribution([1:3],wi_mat_rewards_3(:,1:3),'Color',colvec(5,:))
+plot_distribution([1:5],wi_mat_rewards_5(:,1:5),'Color',colvec(5,:))
 subplot 313
-plot_distribution([1:3],wi_mat_choices_rewards_3(:,1:3),'Color',colvec(5,:))
+plot_distribution([1:5],wi_mat_choices_rewards_5(:,1:5),'Color',colvec(5,:))
+
+
 
 
 for d = 1:2100
@@ -135,36 +146,9 @@ for d = 1:2100
 %     LossLOU(d-1,18) = LossLOU_mat{d}(18);
 %     LossLOU(d-1,19) = LossLOU_mat{d}(19);
 %     LossLOU(d-1,20) = LossLOU_mat{d}(20);
-=======
-plot_distribution([1:5],wi_mat_choices_5(:,1:5),'Color',colvec(5,:))
-subplot 312
-plot_distribution([1:5],wi_mat_rewards_5(:,1:5),'Color',colvec(5,:))
-subplot 313
-plot_distribution([1:5],wi_mat_choices_rewards_5(:,1:5),'Color',colvec(5,:))
+end
 
 
-for d = 2:15
-    LossLOU(d-1,1) = LossLOU_mat{d}(1);
-    LossLOU(d-1,2) = LossLOU_mat{d}(2)
-    LossLOU(d-1,3) = LossLOU_mat{d}(3)
-    LossLOU(d-1,4) = LossLOU_mat{d}(4)
-    LossLOU(d-1,5) = LossLOU_mat{d}(5)
-    LossLOU(d-1,6) = LossLOU_mat{d}(6)
-    LossLOU(d-1,7) = LossLOU_mat{d}(7)
-    LossLOU(d-1,8) = LossLOU_mat{d}(8)
-    LossLOU(d-1,9) = LossLOU_mat{d}(9)
-    LossLOU(d-1,10) = LossLOU_mat{d}(10)
-    LossLOU(d-1,11) = LossLOU_mat{d}(11)
-    LossLOU(d-1,12) = LossLOU_mat{d}(12)
-    LossLOU(d-1,13) = LossLOU_mat{d}(13)
-    LossLOU(d-1,14) = LossLOU_mat{d}(14)
-    LossLOU(d-1,15) = LossLOU_mat{d}(15)
-    LossLOU(d-1,16) = LossLOU_mat{d}(16)
-    LossLOU(d-1,17) = LossLOU_mat{d}(17)
-    LossLOU(d-1,18) = LossLOU_mat{d}(18)
-    LossLOU(d-1,19) = LossLOU_mat{d}(19)
-    LossLOU(d-1,20) = LossLOU_mat{d}(20)
->>>>>>> 082b6c139c26158bb5d768527420841216ba232b
-end    
+  
 
 plot_distribution([1:10],LossLOU,'Color',colvec(5,:))
