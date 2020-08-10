@@ -70,8 +70,7 @@ for simnum = 1:2100
             X(i-H,(2*H+1):(3*H)) = c(i-(1:H)).*r(i-(1:H));
         end
         % Leave one out
-        for i = 1:n
-%             i
+        %             i
             Xi = X;
             %Xi(i,:) = [];
             Yi = Y;
@@ -91,9 +90,10 @@ for simnum = 1:2100
             % (where n = N-H, where N is the number of choices made in the
             % session).
 
-            wi_mat{(simnum),H}(:,i)=wi;
-
-    %         hi = [X(i,:) 1]*wi;
+            wi_mat{(simnum),H}=wi;
+        
+        for i = 1:n
+%
 
             % hi is the predicted Y values based on the given Xs and calculated
             % wis
