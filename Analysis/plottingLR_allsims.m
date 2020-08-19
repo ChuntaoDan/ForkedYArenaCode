@@ -1,4 +1,4 @@
-colvec = color_vec = cbrewer('qual','Dark2',10,'cubic');
+colvec = cbrewer('qual','Dark2',10,'cubic');
 
 figure
 hold on
