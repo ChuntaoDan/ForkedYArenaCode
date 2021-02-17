@@ -1,4 +1,4 @@
-function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_reward_ratio,gotofig] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order,reward_order,lookback,conts,pre_sum,baiting,reward,gotofig)
+function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,ave_choice_ratio_sec_half,fig_count,ave_reward_ratio,ave_reward_ratio_sec_half,gotofig] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order,reward_order,lookback,conts,pre_sum,baiting,reward,gotofig)
     
     
     inst_choice_ratio = [];
@@ -31,8 +31,10 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
     
     num_O_choices = length(find(choice_order(1 : end) == 2));
     num_M_choices = length(find(choice_order(1 : end) == 1));
+    num_O_choices_sec_half = length(find(choice_order(41 : end) == 2));
+    num_M_choices_sec_half = length(find(choice_order(41 : end) == 1));
     ave_choice_ratio = rad2deg(atan(num_O_choices/num_M_choices));
-    
+    ave_choice_ratio_sec_half = rad2deg(atan(num_O_choices_sec_half/num_M_choices_sec_half));
 
     num_O_rewarded = 0;
     num_M_rewarded = 0;
@@ -62,9 +64,11 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
         num_O_rewarded = length(find(reward_order == 2));
         num_M_rewarded = length(find(reward_order == 1));
         ave_reward_slope = (num_O_rewarded/num_M_rewarded);
-            
-    
+    num_O_rewarded_sec_half = length(find(reward_order(41 : end) == 2));
+    num_M_rewarded_sec_half = length(find(reward_order(41 : end) == 1));
+    ave_reward_slope_sec_half = (num_O_rewarded_sec_half/num_M_rewarded_sec_half);
     ave_reward_ratio = rad2deg(atan(ave_reward_slope));
+    ave_reward_ratio_sec_half = rad2deg(atan(ave_reward_slope_sec_half));
 %     if conts == 1
 %         ave_reward_ratio = 45;
 %     end    
@@ -108,11 +112,8 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
     plot(pre_sum+1 : pre_sum + length(inst_choice_ratio),inst_choice_ratio,'LineWidth',4,'Color','b')
     hold on
     if protocol_100_0 ~= 1 
-<<<<<<< HEAD
-%         plot(inst_income_ratio,'LineWidth',4,'Color','k')
-=======
         plot(pre_sum+1:pre_sum + length(choice_order),inst_income_ratio,'LineWidth',4,'Color','k')
->>>>>>> 9d2760640073c206b4c5a280cc37700186926f0c
+
         if protocol_100_0 == 2
             plot(pre_sum+1:pre_sum + length(choice_order),ones(1,length(choice_order))*ave_reward_ratio,'LineWidth',6,'Color','k')
         elseif protocol_100_0 == 3
@@ -126,20 +127,20 @@ function [inst_choice_ratio,inst_income_ratio,ave_choice_ratio,fig_count,ave_rew
     for r = 1:length(reward_order)
         if choice_order(r) == 2
             if reward_order(r) == 2
-                plot([r,r],[92,97],'Color',[84/256,174/256,0],'LineWidth',4)
+                plot([pre_sum+r,pre_sum+r],[92,97],'Color',[84/256,174/256,0],'LineWidth',4)
             else
-                plot([r,r],[92,94],'Color',[84/256,174/256,0],'LineWidth',4)
+                plot([pre_sum+r,pre_sum+r],[92,94],'Color',[84/256,174/256,0],'LineWidth',4)
             end
         else
             if reward_order(r) == 1
-                plot([r,r],[-7,-2],'Color',[242/256,174/256,21/256],'LineWidth',4)
+                plot([pre_sum+r,pre_sum+r],[-7,-2],'Color',[242/256,174/256,21/256],'LineWidth',4)
             else
-                plot([r,r],[-4,-2],'Color',[242/256,174/256,21/256],'LineWidth',4)
+                plot([pre_sum+r,pre_sum+r],[-4,-2],'Color',[242/256,174/256,21/256],'LineWidth',4)
             end
         end
     end
     box off
     axis off
     ylim([-7,97])
-    keyboard
+
 end

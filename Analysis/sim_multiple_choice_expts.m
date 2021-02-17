@@ -56,8 +56,12 @@ for jj = 1:length(reward_conts)
                 [nC1(count),nC2(count),nI1(count),nI2(count),I_list(count,:),C_list(count,:),v1(count,:),v2(count,:)] = Strategy2_v2(nblocks,ntrials,reward_conts(jj,:),total_prob_r-reward_conts(jj,:),window_trials);
             end
         elseif strategy_num == 3
-            [nC1(count),nC2(count),nI1(count),nI2(count),I1_list(count,:),I2_list(count,:),C1_list(count,:),C2_list(count,:),v1(count,:),v2(count,:)] = Strategy3(nblocks,ntrials,reward_conts(jj,:),total_prob_r-reward_conts(jj,:),window_trials,exp_p);
-        end 
+            if version_number == 1
+                [nC1(count),nC2(count),nI1(count),nI2(count),I1_list(count,:),I2_list(count,:),C1_list(count,:),C2_list(count,:),v1(count,:),v2(count,:)] = Strategy3(nblocks,ntrials,reward_conts(jj,:),total_prob_r-reward_conts(jj,:),window_trials,exp_p);
+            else
+                [nC1(count),nC2(count),nI1(count),nI2(count),I_list(count,:),C_list(count,:),v1(count,:),v2(count,:)] = Strategy3_v2(nblocks,ntrials,reward_conts(jj,:),total_prob_r-reward_conts(jj,:),window_trials,exp_p);
+            end
+        end
     end    
 end    
 

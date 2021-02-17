@@ -41,14 +41,14 @@ for folder_n = 1:length(mat_file_list)
     xy_fly = NaN(n_frames, 2); % Create a matrix for the x and y coordinates of fly per frame
     
     % background calculation
-    for aa = 1:15
+    for aa = 1:10
     background_images(:,:,aa) = load_frames(aa*10000,1,header,expt);
     end
-    for pics = 1:15
+    for pics = 1:10
         if pics == 1
-            sum_background = (1/15)*background_images(:,:,pics);
+            sum_background = (1/10)*background_images(:,:,pics);
         else    
-         sum_background = sum_background + (1/15)*background_images(:,:,pics);
+         sum_background = sum_background + (1/10)*background_images(:,:,pics);
 
         end
     end  

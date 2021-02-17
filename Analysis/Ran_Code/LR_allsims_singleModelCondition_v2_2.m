@@ -20,10 +20,10 @@ LL_mat = {};
 
 for simnum = 1:10:2100
     simnum
-%     choice_order = CO(simnum,:);
-%     reward_order = RO(simnum,:);
-    choice_order = CO(((simnum-1)*240)+1 : simnum*240);
-    reward_order = RO(((simnum-1)*240)+1 : simnum*240);
+    choice_order = CO(simnum,:);
+    reward_order = RO(simnum,:);
+%     choice_order = CO(((simnum-1)*240)+1 : simnum*240);
+%     reward_order = RO(((simnum-1)*240)+1 : simnum*240);
     
     % n0=length(cps_pre);
     n0=1;
@@ -127,16 +127,11 @@ for simnum = 1:10:2100
         
     end
     
-    LL_mat{simnum} = LL
+    LL_mat{simnum} = LL;
     Pc_mat{simnum} = Pc;
     P2_mat{simnum} = yhat;
     LossLOU_mat{simnum} = LossLOU;
     
 end    
     
-    figure(11)
-    subplot (2,3,H)
-    plot(Pc(H,:),'g')
-    hold on
-    plot(P2(H,:),'k')
-    plot(Y-1,'or')
+

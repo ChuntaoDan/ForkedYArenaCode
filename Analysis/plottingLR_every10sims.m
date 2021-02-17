@@ -1,3 +1,5 @@
+colvec  = cbrewer('qual','Dark2',10,'cubic');
+
 d= 0
 for ct = 1:10:2100
     if isnan(LossLOU_mat{ct}(1))||isnan(LossLOU_mat{ct}(2))||isnan(LossLOU_mat{ct}(3))||isnan(LossLOU_mat{ct}(4))||isnan(LossLOU_mat{ct}(5))

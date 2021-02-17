@@ -5,7 +5,10 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
 %     clc
 
     % Select spreadsheet containing experiment names
-    cd('/Users/adiraj95/Documents/MATLAB/TurnerLab_Code/') % Change directory to folder containing experiment lists
+% FOR MAC LAPTOP
+%   cd('/Users/adiraj95/Documents/MATLAB/TurnerLab_Code/') % Change directory to folder containing experiment lists
+    % FOR WORK DESKTOP
+    cd('/groups/turner/home/rajagopalana/Documents/Turner Lab/Y-Arena/')
     [FileName, PathName] = uigetfile('*', 'Select spreadsheet containing experiment names', 'off');
 
     [~, expts, ~] = xlsread([PathName, FileName]);
@@ -19,6 +22,8 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
     fig_count = 0;
     ave_choice_ratios = [];
     ave_reward_ratios = [];
+    ave_choice_ratios_sec_half = [];
+    ave_reward_ratios_sec_half = [];
     
     color_vec = cbrewer('qual','Dark2',10,'cubic');
     Air_Color = 0*color_vec(6,:);
@@ -33,23 +38,27 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
     p_switching_g_Nreward = [];
     p_switching_g_reward =[];
     
-    for expt_n = 1:length(expts)
+    for expt_n = 4:length(expts)
         expt_name = expts{expt_n, 1};
         cd(expt_name)
         conds = dir(expt_name);
 
-        for cond_n = 4:4%length(conds)
+        for cond_n =1:length(conds)
             % Skip the folders containing '.'
             if startsWith(conds(cond_n).name, '.')
                 count = count+1;
                 continue
             end
-            
-
+              
+            choice_order = [];
+            reward_order = [];
 
             % Change directory to file containing flycounts 
             cond = strcat(expt_name, '/', conds(cond_n).name);
             cd(cond)
+%             if exist('figure1.fig')==2
+%                 continue
+%             end    
             gotofig = 0;
             gotofig2 = 0;
             conts = dir(cond);
@@ -59,7 +68,14 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                     length_conts = length_conts + 1;
                 end
             end    
-            for conts = 1:length_conts-1 % this set of expts has 3 conts
+            
+            if length_conts == 4
+                subt = 1;
+            else
+                subt = 3;
+            end    
+            
+            for conts = 1:length_conts-subt % this set of expts has 3 conts
                 
                 load(sprintf('all_variables_contingency_%d',conts))
                    
@@ -74,7 +90,10 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                 [xy_no_minus_ones,timestamps_no_minus_ones] = no_minus_ones(xy,timestamps);
                 [region_at_time] = region_time_vector(xy_no_minus_ones,binarymask1,binarymask2,binarymask3,binarymask4,binarymask5,binarymask6,binarymask7,binarymask8,binarymask9);
                 [x_y_time_color] = plot_position_choices(region_at_time,xy_no_minus_ones,timestamps_no_minus_ones,air_arm,right_left,cps_first);
-
+                % Specific fix
+                if length(x_y_time_color.distance_up_arm) ~= length(x_y_time_color.time)
+                    x_y_time_color.distance_up_arm(length(x_y_time_color.distance_up_arm)+1:length(x_y_time_color.distance_up_arm)+1+(length(x_y_time_color.time)-length(x_y_time_color.distance_up_arm))) = x_y_time_color.distance_up_arm(length(x_y_time_color.distance_up_arm))*ones(1,(length(x_y_time_color.time)-length(x_y_time_color.distance_up_arm)));
+                end    
                 
                 [pi,cps] = preference_index_multConts(air_arm,right_left,x_y_time_color);
                 [a,b,c,d,arm_bias_pi] = arm_bias(air_arm,right_left);
@@ -99,7 +118,6 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                 end    
                 cont_switch(num_figs+1) = length(x_y_time_color.time);
                     for k = 1:num_figs
-                       
                         figure(fig_count+1)
                         fig_count = fig_count+1
                         hold on
@@ -231,12 +249,12 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                     
                     inst_choice_ratio =[];
                     if conts > 1
-                        [inst_choice_ratio,inst_income_ratio,ave_choice_ratios(cond_n-2,conts),fig_count,ave_reward_ratios(cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,pre_sum,baiting,reward,gotofig2)
+                        [inst_choice_ratio,inst_income_ratio,ave_choice_ratios(expt_n,cond_n-2,conts),ave_choice_ratios_sec_half(expt_n,cond_n-2,conts),fig_count,ave_reward_ratios(expt_n,cond_n-2,conts),ave_reward_ratios_sec_half(expt_n,cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,pre_sum,baiting,reward,gotofig2)
                         pre_sumM = summed_M_choices_ends(end) ;
                         pre_sumO = summed_O_choices_ends(end);
                         pre_sum = summed_choices_ends(end);
                     else
-                        [inst_choice_ratio,inst_income_ratio,ave_choice_ratios(cond_n-2,conts),fig_count,ave_reward_ratios(cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,0,baiting,reward,gotofig2)
+                        [inst_choice_ratio,inst_income_ratio,ave_choice_ratios(expt_n,cond_n-2,conts),ave_choice_ratios_sec_half(expt_n,cond_n-2,conts),fig_count,ave_reward_ratios(expt_n,cond_n-2,conts),ave_reward_ratios_sec_half(expt_n,cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,0,baiting,reward,gotofig2)
                     end
                     
                     
@@ -398,17 +416,17 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
             end   
             % THIS NEEDS TO BE CHANGED AS AND WHEN MORE FIGURE ARE
                     % GENERATED
-            if save_fig == 1 %&&  exist('speed_time.fig') ~= 2
+            if save_fig == 1 &&  exist('figure1.fig') ~= 2
 
-%                 for fc = 1:fig_count
-%                     if fig_count == gotofig
-%                         saveas(figure(gotofig),'summed_choices_ends.fig')
-%                     elseif fig_count == gotofig2
-%                         saveas(figure(gotofig2),'inst_CR_lb10.fig')
-%                     else
-%                         saveas(figure(fc),sprintf('figure%d.fig',fc))
-%                     end    
-%                 end
+                for fc = 1:fig_count
+                    if fig_count == gotofig
+                        saveas(figure(gotofig),'summed_choices_ends.fig')
+                    elseif fig_count == gotofig2
+                        saveas(figure(gotofig2),'inst_CR_lb10.fig')
+                    else
+                        saveas(figure(fc),sprintf('figure%d.fig',fc))
+                    end    
+                end
 
 
 %                 saveas(figure(1),'pre_reward_summary.fig')
@@ -428,10 +446,15 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                 pause(60)
 %                     elseif save_fig == 1 && exist('speed_time.fig') == 2
 %                         fig_count = 0;
-
-                close all
-                fig_count = 0;
-            end 
+ 
+                
+                
+            end
+            save('choice_order.mat','choice_order')
+            save('reward_order.mat','reward_order')
+%                        
+            fig_count = 0;
+            close all
         end
 
 %             pis = cat(1,pi_pre,pi_post);
@@ -461,7 +484,8 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
     
     save('ave_CR.mat','ave_choice_ratios')
     save('ave_IR.mat','ave_reward_ratios')
-
+    save('ave_CR_sec_half.mat','ave_choice_ratios_sec_half')
+    save('ave_IR_sec_half.mat','ave_reward_ratios_sec_half')
     
     % 
     % figure(101)

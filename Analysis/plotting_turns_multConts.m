@@ -134,72 +134,72 @@ function [peaks] = plotting_turns_multConts()
                 end    
                 cont_switch(num_figs+1) = length(x_y_time_color.time);
 
-%                 for k = 1:num_figs
-%                     if length(find(times(locs) > k*1800,1)) ==1
-%                         splt(k) = find(times(locs) > k*1800,1);
-%                     else
-%                         splt(k) = 0;
-%                     end    
-%                     figure(fig_count+1)
-%                     fig_count = fig_count+1
-%                     hold on
-%                     for i  = cont_switch(k):cont_switch(k+1)-1
-%                         if sum(x_y_time_color.color(i) == Air_Color) == 3
-%                             if sum(x_y_time_color.color(i+1) == Air_Color) == 3
-%                                 plot(x_y_time_color.time(i:i+1),1*(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
-%                             elseif sum(x_y_time_color.color(i+1) == Air_Color) ~= 3
-%                                 plot(x_y_time_color.time(i:i+1),[1*(x_y_time_color.distance_up_arm(i)),(x_y_time_color.distance_up_arm(i+1))],'LineWidth',3,'Color',x_y_time_color.color(i,:))
-%                             end    
-%                         else
-%                             if sum(x_y_time_color.color(i+1) == Air_Color) == 3
-% %                                 plot(x_y_time_color.time(i:i+1),[x_y_time_color.distance_up_arm(i),-1*(x_y_time_color.distance_up_arm(i))],'LineWidth',3,'Color',Air_Color)
-%                             else
-%                                 plot(x_y_time_color.time(i:i+1),(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
-%                             end    
-%                         end
-%                     end 
-%                     cc = 0;
-%                     timestamps_summed = [];
-%                     for tt  = cps(max(find(cps<cont_switch(k)+1))+1:max(find(cps<cont_switch(k+1))))
-%                         no_match = 1;
-%                         kk = 0;
-%                         while no_match == 1
-%                             kk = kk+1;
-%                             if sum(x_y_time_color.color(tt-kk,:) == M_A_Color )==3 ||sum(x_y_time_color.color(tt-kk,:) == M_O_Color )==3
-%                                 dot_color = M_A_Color;
-%                                 no_match = 0;
-%                             elseif sum(x_y_time_color.color(tt-kk,:) == O_A_Color)==3 ||sum(x_y_time_color.color(tt-kk,:) == O_M_Color)==3
-%                                 dot_color = O_A_Color;
-%                                 no_match = 0;
-%                             end 
-%                         end    
-%                         cc = cc+1; 
-%                         timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
-%                         scatter(timestamps_summed(cc),460,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
-% 
-% %                         scatter(timestamps_summed(cc),1,100,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
-%                     end
-%                      
-% 
-%                     if k == 1
-%                         if splt(k)== 0
-%                             scatter(times(locs(1:end)),local_maxima(1:end),'filled','r')
-%                         else
-%                             scatter(times(locs(1:splt(k))),local_maxima(1:splt(k)),'filled','r')
-%                         end
-%                         
-%                     else
-%                         if splt(k) ~= 0
-%                            scatter(times(locs(splt(k-1):splt(k))),local_maxima(splt(k-1):splt(k)),'filled','g')
-%                         else
-%                            scatter(times(locs(splt(k-1):end)),local_maxima(splt(k-1):end),'filled','g')
-%                         end
-%                     end 
-%                     xlabel('time (sec)');
-%                     ylabel('distance (pixels)');
-% 
-% 
-%                 end
+                for k = 1:num_figs
+                    if length(find(times(locs) > k*1800,1)) ==1
+                        splt(k) = find(times(locs) > k*1800,1);
+                    else
+                        splt(k) = 0;
+                    end    
+                    figure(fig_count+1)
+                    fig_count = fig_count+1
+                    hold on
+                    for i  = cont_switch(k):cont_switch(k+1)-1
+                        if sum(x_y_time_color.color(i) == Air_Color) == 3
+                            if sum(x_y_time_color.color(i+1) == Air_Color) == 3
+                                plot(x_y_time_color.time(i:i+1),1*(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            elseif sum(x_y_time_color.color(i+1) == Air_Color) ~= 3
+                                plot(x_y_time_color.time(i:i+1),[1*(x_y_time_color.distance_up_arm(i)),(x_y_time_color.distance_up_arm(i+1))],'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            end    
+                        else
+                            if sum(x_y_time_color.color(i+1) == Air_Color) == 3
+%                                 plot(x_y_time_color.time(i:i+1),[x_y_time_color.distance_up_arm(i),-1*(x_y_time_color.distance_up_arm(i))],'LineWidth',3,'Color',Air_Color)
+                            else
+                                plot(x_y_time_color.time(i:i+1),(x_y_time_color.distance_up_arm(i:i+1)),'LineWidth',3,'Color',x_y_time_color.color(i,:))
+                            end    
+                        end
+                    end 
+                    cc = 0;
+                    timestamps_summed = [];
+                    for tt  = cps(max(find(cps<cont_switch(k)+1))+1:max(find(cps<cont_switch(k+1))))
+                        no_match = 1;
+                        kk = 0;
+                        while no_match == 1
+                            kk = kk+1;
+                            if sum(x_y_time_color.color(tt-kk,:) == M_A_Color )==3 ||sum(x_y_time_color.color(tt-kk,:) == M_O_Color )==3
+                                dot_color = M_A_Color;
+                                no_match = 0;
+                            elseif sum(x_y_time_color.color(tt-kk,:) == O_A_Color)==3 ||sum(x_y_time_color.color(tt-kk,:) == O_M_Color)==3
+                                dot_color = O_A_Color;
+                                no_match = 0;
+                            end 
+                        end    
+                        cc = cc+1; 
+                        timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
+                        scatter(timestamps_summed(cc),460,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
+
+%                         scatter(timestamps_summed(cc),1,100,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
+                    end
+                     
+
+                    if k == 1
+                        if splt(k)== 0
+                            scatter(times(locs(1:end)),local_maxima(1:end),'filled','r')
+                        else
+                            scatter(times(locs(1:splt(k))),local_maxima(1:splt(k)),'filled','r')
+                        end
+                        
+                    else
+                        if splt(k) ~= 0
+                           scatter(times(locs(splt(k-1):splt(k))),local_maxima(splt(k-1):splt(k)),'filled','g')
+                        else
+                           scatter(times(locs(splt(k-1):end)),local_maxima(splt(k-1):end),'filled','g')
+                        end
+                    end 
+                    xlabel('time (sec)');
+                    ylabel('distance (pixels)');
+
+
+                end
 
                  
                 
