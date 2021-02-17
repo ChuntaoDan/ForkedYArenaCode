@@ -12,17 +12,17 @@ v1 = [];
 v2 = [];
 pred_choice = [];
 
-% for k = 1:size(CO,2)
-% choice_order((k-1)*80 + 1 : (k)*80) = CO(:,k);
-% reward_order((k-1)*80 + 1 : (k)*80) = RO(:,k);
-% end
+for k = 1:size(CO,2)
+choice_order((k-1)*80 + 1 : (k)*80) = CO(:,k);
+reward_order((k-1)*80 + 1 : (k)*80) = RO(:,k);
+end
+
+zero_locs = find(choice_order == 0);
+choice_order(zero_locs) = [];
+reward_order(zero_locs) = [];
 % 
-% zero_locs = find(choice_order == 0);
-% choice_order(zero_locs) = [];
-% reward_order(zero_locs) = [];
-% % 
-choice_order( 1 : 80) = CO(:,3);
-reward_order( 1 : 80) = RO(:,3);
+% choice_order( 1 : 80) = CO(:,3);
+% reward_order( 1 : 80) = RO(:,3);
 
 for t_num = window_size+1:length(choice_order)
     choices = [];

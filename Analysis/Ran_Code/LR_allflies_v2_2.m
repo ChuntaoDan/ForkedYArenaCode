@@ -93,9 +93,9 @@ for expt_n = 1:length(expts)
         %     r = reward_order;
             Y = choice_order((H+1):end)';
             for i = (H+1):N
-                X(i-H,1:H) = c(i-(1:H));
-                X(i-H,(H+1):(2*H)) = r(i-(1:H));
-                X(i-H,(2*H+1):(3*H)) = c(i-(1:H)).*r(i-(1:H));
+                X(i-H,1:H) = r(i-(1:H));
+%                 X(i-H,(H+1):(2*H)) = r(i-(1:H));
+%                 X(i-H,(2*H+1):(3*H)) = c(i-(1:H)).*r(i-(1:H));
                 
             end
 
@@ -188,6 +188,6 @@ for expt_n = 1:length(expts)
         Pc_mat{count} = Pc;
         P2_mat{count} = yhat;
         LossLOU_mat{count} = LossLOU;
-    
+        keyboard
     end    
 end    
