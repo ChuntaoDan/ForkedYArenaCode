@@ -112,11 +112,12 @@ for expt_n = 1:length(expts)
         MI(expt_n,count) = H_Y - H_YgX;
         
         %% MI for Logistic Regression predictor and current choice
-        
         H_vec = n_trials;
         N = length(choice_order);
         lenH=length(H_vec);
         indH=0;
+        
+        Y_hat_bin_num = 10;
 
         for H=H_vec
             tic;
@@ -172,10 +173,11 @@ for expt_n = 1:length(expts)
              
         end
         
-        [C,ia,ic] = unique(yhat);
+%         [C,ia,ic] = unique(yhat);
+
         yhat_counts = [];
-        for i = 1:length(ia)
-            yhat_counts(i) = length(find(ic == ia(i)));
+        for i = 1:Y_hat_bin_num
+            yhat_counts(i) = length(find( yhat<=((i+1)/Y_hat_bin_num))) - sum(yhat_counts);
         end
         
         P_Yhat = yhat_counts/sum(yhat_counts);
@@ -189,16 +191,16 @@ for expt_n = 1:length(expts)
         yhatg0_counts = [];
         Y_0_ids = find(Yi == 0);
         
-        [C,ia,ic] = unique(yhat(Y_1_ids));
-        
-        for i = 1:length(ia)
-            yhatg1_counts(i) = length(find(ic == ia(i)));
+%         [C,ia,ic] = unique(yhat(Y_1_ids));
+%         
+        for i = 1:Y_hat_bin_num
+            yhatg1_counts(i) = length(find(yhat(Y_1_ids) <= ((i+1)/Y_hat_bin_num))) - sum(yhatg1_counts);
         end
         
-        [C,ia,ic] = unique(yhat(Y_0_ids));
-        
-        for i = 1:length(ia)
-            yhatg0_counts(i) = length(find(ic == ia(i)));
+%         [C,ia,ic] = unique(yhat(Y_0_ids));
+%         
+        for i = 1:Y_hat_bin_num
+            yhatg0_counts(i) = length(find(yhat(Y_0_ids) <= ((i+1)/Y_hat_bin_num))) - sum(yhatg0_counts);
         end
         
         P_yhatg1 = yhatg1_counts/sum(yhatg1_counts);
@@ -216,18 +218,17 @@ for expt_n = 1:length(expts)
         
         MI_yhat(expt_n,count) = H_yhat - H_yhatgX;
         
-        
      %% MI for sugrue predictor with current choice   
         v1 = [];
         v2 = [];
         v = [];
         pred_choice = [];
         [tau,beta] = sugrue_like_model_mult_tau_bias_singleFly(cond,tau_list,beta_list);
-        for t_num = 11:length(choice_order)
+        for t_num = 4:length(choice_order)
             choices = [];
             rewards = [];
-            choices = choice_order(t_num-10 : t_num - 1);
-            rewards = reward_order(t_num-10 : t_num - 1);
+            choices = choice_order(t_num-3 : t_num - 1);
+            rewards = reward_order(t_num-3 : t_num - 1);
             v1_list = [];
             v2_list = [];
             for ct = 1:length(choices)
@@ -247,25 +248,28 @@ for expt_n = 1:length(expts)
                     end
                 end 
             end   
+            if tau == 0
+                tau = 0.001
+            end    
             exp_w_list = exp((tau - [1:length(choices)]+1)/tau)./exp(1);     
             valid_els_1 = find(flip(v1_list)~= -1);   
             valid_els_2 = find(flip(v2_list) ~= -1); 
             flip_v1_list = flip(v1_list);
             flip_v2_list = flip(v2_list);
             % exp weighted sum for value
-            v1(t_num-10) = sum((exp_w_list(valid_els_1)).*flip_v1_list(valid_els_1));
-            v2(t_num-10) = sum((exp_w_list(valid_els_2)).*flip_v2_list(valid_els_2));
-            v(t_num-10) = 1/(1+exp(-beta*(v1(t_num-10) - v2(t_num-10))));
+            v1(t_num-3) = sum((exp_w_list(valid_els_1)).*flip_v1_list(valid_els_1));
+            v2(t_num-3) = sum((exp_w_list(valid_els_2)).*flip_v2_list(valid_els_2));
+            v(t_num-3) = 1/(1+exp(-beta*(v1(t_num-3) - v2(t_num-3))));
         end
 
         [C,ia,ic] = unique(v);
         v_counts = [];
-        for i = 1:length(ia)
-            v_counts(i) = length(find(ic == ia(i)));
+        for i = 1:Y_hat_bin_num
+            v_counts(i) = length(find( v<=((i+1)/Y_hat_bin_num))) - sum(v_counts);
         end
         
-        P_Yhat = v_counts/sum(v_counts);
-        U = P_Yhat.*log(P_Yhat);
+        P_v = v_counts/sum(v_counts);
+        U = P_v.*log(P_v);
         U_nan = isnan(U);
         U(find(U_nan == 1)) = 0;
         H_v = -sum(U);
@@ -275,15 +279,16 @@ for expt_n = 1:length(expts)
         
         [C,ia,ic] = unique(v(Y_1_ids));
         
-        for i = 1:length(ia)
-            vg1_counts(i) = length(find(ic == ia(i)));
+        for i = 1:Y_hat_bin_num
+            vg1_counts(i) = length(find( v(Y_1_ids)<=((i+1)/Y_hat_bin_num))) - sum(vg1_counts);
+        
         end
         
         [C,ia,ic] = unique(v(Y_0_ids));
         
-        for i = 1:length(ia)
-            vg0_counts(i) = length(find(ic == ia(i)));
-        end
+        for i = 1:Y_hat_bin_num
+            vg0_counts(i) = length(find( v(Y_0_ids)<=((i+1)/Y_hat_bin_num))) - sum(vg0_counts);
+         end
         
         P_vg1 = vg1_counts/sum(vg1_counts);
         P_vg0 = vg0_counts/sum(vg0_counts);
@@ -299,6 +304,7 @@ for expt_n = 1:length(expts)
         H_vgX = (sum(vg1_counts)/(sum(vg1_counts)+sum(vg0_counts)))*H_vg1 + (sum(vg0_counts)/(sum(vg1_counts)+sum(vg0_counts)))*H_vg0;
         
         MI_v(expt_n,count) = H_v - H_vgX;
-%         keyboard
+
+
     end
 end    
