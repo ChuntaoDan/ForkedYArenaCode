@@ -88,17 +88,17 @@ count = 0;
 for d = 1:14
 %     if length(find(wi_mat{d,15}(2:31,1)==0)) < 10 
         count = count + 1
-        wi_mat_choices_15(count,:) = wi_mat{d,15}(1:16,1);
-        wi_mat_rewards_15(count,:) = wi_mat{d,15}(17:31,1);
+%         wi_mat_choices_15(count,:) = wi_mat{d,15}(1:16,1);
+        wi_mat_rewards_15(count,:) = wi_mat{d,15}(1:16,1);
 %     wi_mat_choices_rewards_15(d,:) = wi_mat{d,15}(32:46,1);
 %     end
 end 
 
 figure;
 subplot 211
-plot_distribution([2:16],wi_mat_choices_15(:,2:16),'Color',colvec(5,:))
-subplot 212
-plot_distribution([1:15],wi_mat_rewards_15(:,1:15),'Color',colvec(5,:))
+% plot_distribution([2:16],wi_mat_choices_15(:,2:16),'Color',colvec(5,:))
+% subplot 212
+plot_distribution([1:16],wi_mat_rewards_15(:,1:16),'Color',colvec(5,:))
 % subplot 313
 % plot_distribution([1:10],wi_mat_choices_rewards_10(:,1:10),'Color',colvec(5,:))
 
@@ -108,19 +108,19 @@ wi_mat_choices_3 = [];
 wi_mat_rewards_3 = [];
 wi_mat_choices_rewards_3 = [];
 
-for d = 1:17
-    wi_mat_choices_3(d-17,:) = wi_mat{d,3}(2:4,1);
-    wi_mat_rewards_3(d-17,:) = wi_mat{d,3}(5:7,1);
-    wi_mat_choices_rewards_3(d-17,:) = wi_mat{d,3}(8:10,1);
+for d = 1:14
+%     wi_mat_choices_3(d-17,:) = wi_mat{d,3}(2:4,1);
+    wi_mat_rewards_3(d,:) = wi_mat{d,3}(2:4,1);
+%     wi_mat_choices_rewards_3(d-17,:) = wi_mat{d,3}(8:10,1);
 end
 
 figure
-subplot 311
-plot_distribution([1:3],wi_mat_choices_3(:,1:3),'Color',colvec(5,:))
-subplot 312
+% subplot 311
+% plot_distribution([1:3],wi_mat_choices_3(:,1:3),'Color',colvec(5,:))
+% subplot 312
 plot_distribution([1:3],wi_mat_rewards_3(:,1:3),'Color',colvec(5,:))
-subplot 313
-plot_distribution([1:3],wi_mat_choices_rewards_3(:,1:3),'Color',colvec(5,:))
+% subplot 313
+% plot_distribution([1:3],wi_mat_choices_rewards_3(:,1:3),'Color',colvec(5,:))
 
 
 

@@ -1,10 +1,10 @@
 % Creat vectors to permute with different number of 1s and 0s
-
+window_size = 1
 all_reward_combs = []
 
-for i = 0:10
-    for j = 0:10-i
-        v = zeros(10,1);
+for i = 0:window_size
+    for j = 0:window_size-i
+        v = zeros(window_size,1);
         v(1:i) = 1;
         v(i+1:i+j) = 2;
 
@@ -17,6 +17,6 @@ for i = 0:10
         all_reward_combs = vertcat(all_reward_combs,all_reward_combs_ij);
     end
 end    
-
-save('/Users/adiraj95/Documents/MATLAB/TurnerLab_Code/past10_reward_combs.mat', 'all_reward_combs')
+filename = sprintf('/groups/turner/home/rajagopalana/Documents/Turner Lab/Y-Arena/past%d_reward_combs.mat',window_size)
+save(filename, 'all_reward_combs')
 

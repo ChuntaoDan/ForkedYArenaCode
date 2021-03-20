@@ -2,14 +2,12 @@ function [x_y_time_color] = plot_position_choices(region_at_time,xy,timestamps,a
     x_y_time_color = struct('xy',[],'time',[],'distance_up_arm',[],'color',[]);
     choicetime = [];
 
-    color_vec = cbrewer('qual','Dark2',10,'cubic')
+    color_vec = cbrewer('qual','Dark2',10,'cubic');
     Air_Color = 0*color_vec(6,:);
     O_A_Color = color_vec(1,:);
     O_M_Color = 0.6*color_vec(1,:);
     M_A_Color = color_vec(7,:);
     M_O_Color = 0.7*color_vec(7,:);
-
-        
     
     pastregion147 = 0;
     pastregion258 = 0;
@@ -78,6 +76,7 @@ function [x_y_time_color] = plot_position_choices(region_at_time,xy,timestamps,a
             x_y_time_color.color(count,:) = x_y_time_color.color(count-1,:); 
         end
         if choice_count <= length(cps)
+
             if i < cps(choice_count)
                 if pastregion147 == 1
                     if region_at_time(i) == 1||region_at_time(i)== 4||region_at_time(i) == 7

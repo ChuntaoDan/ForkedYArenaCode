@@ -3,7 +3,7 @@ clear
 % close all
 count = 0;
 % Select spreadsheet containing experiment names
-cd('/Users/adiraj95/Documents/MATLAB/TurnerLab_Code/') % Change directory to folder containing experiment lists
+cd('/groups/turner/home/rajagopalana/Documents/Turner Lab/Y-Arena/') % Change directory to folder containing experiment lists
 [FileName, PathName] = uigetfile('*', 'Select spreadsheet containing experiment names', 'off');
 
 [~, expts, ~] = xlsread([PathName, FileName]);
@@ -13,15 +13,15 @@ tau_list = [0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,80,100]
 beta_list = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
 % ennumerating all possible reward combinations in past 10 trials
 
-past10_reward_combs = load('/Users/adiraj95/Documents/MATLAB/TurnerLab_Code/past10_reward_combs.mat');
-past10_reward_combs = past10_reward_combs.all_reward_combs;
+past3_reward_combs = load('/groups/turner/home/rajagopalana/Documents/Turner Lab/Y-Arena/past3_reward_combs.mat');
+past3_reward_combs = past3_reward_combs.all_reward_combs;
 
 for expt_n = 1:length(expts)
     expt_name = expts{expt_n, 1};
     cd(expt_name)
     conds = dir(expt_name);
     count = 0;
-    for cond_n = 1:length(conds)-4
+    for cond_n = 1:length(conds)
         % Skip the folders containing '.'
         if startsWith(conds(cond_n).name, '.')
             
@@ -33,7 +33,7 @@ for expt_n = 1:length(expts)
         cond = strcat(expt_name, '/', conds(cond_n).name);
         cd(cond)
         % MI between current choice and past reward
-        n_trials = 10;
+        n_trials = 3;
         Y_dim = 3^n_trials; % 2 ^ number of trials in past to look at reward
         X_dim = 1; % Always 1
 
@@ -54,14 +54,29 @@ for expt_n = 1:length(expts)
         choice_order(zero_locs) = [];
         reward_order(zero_locs) = [];
         
-
+        CR1 = rad2deg(atan(length(find(choice_order(1:80) == 1))/length(find(choice_order(1:80) == 2))));
+        RR1 = rad2deg(atan(length(find(reward_order(1:80) == 1))/length(find(reward_order(1:80) == 2))));
+        UM(expt_n,count,1) = CR1/RR1;
+        
+        if length(choice_order) > 159
+            CR2 = rad2deg(atan(length(find(choice_order(81:160) == 1))/length(find(choice_order(1:80) == 2))));
+            RR2 = rad2deg(atan(length(find(reward_order(81:160) == 1))/length(find(reward_order(1:80) == 2))));
+        else
+            CR2 = rad2deg(atan(length(find(choice_order(81:end) == 1))/length(find(choice_order(81:end) == 2))));
+            RR2 = rad2deg(atan(length(find(reward_order(81:end) == 1))/length(find(reward_order(81:end) == 2))));
+        end
+        UM(expt_n,count,2) = CR2/RR2;
+        
+        CR3 = rad2deg(atan(length(find(choice_order(161:end) == 1))/length(find(choice_order(161:end) == 2))));
+        RR3 = rad2deg(atan(length(find(reward_order(161:end) == 1))/length(find(reward_order(161:end) == 2))));
+        UM(expt_n,count,3) = CR3/RR3;
     %% MI for past 10 rewards with current choice
         % H(Y) - Here Y = most recent past reward
 
         Y_counts = zeros(Y_dim,1);
 
         for i = n_trials+1:length(choice_order)
-            Y_id = find(sum(reward_order(i-n_trials:i-1)==past10_reward_combs,2) == n_trials);
+            Y_id = find(sum(reward_order(i-n_trials:i-1)==past3_reward_combs,2) == n_trials);
             Y_counts(Y_id,1) = Y_counts(Y_id,1)+1;
         end   
 
@@ -77,10 +92,10 @@ for expt_n = 1:length(expts)
 
         for i = n_trials+1:length(choice_order)
             if choice_order(i) == 1
-                Y_id = find(sum(reward_order(i-n_trials:i-1)==past10_reward_combs,2) == n_trials);
+                Y_id = find(sum(reward_order(i-n_trials:i-1)==past3_reward_combs,2) == n_trials);
                 YgX_counts(Y_id,1) = YgX_counts(Y_id,1)+1;
             else
-                Y_id = find(sum(reward_order(i-n_trials:i-1)==past10_reward_combs,2) == n_trials);
+                Y_id = find(sum(reward_order(i-n_trials:i-1)==past3_reward_combs,2) == n_trials);
                 YgX_counts(Y_id,2) = YgX_counts(Y_id,2)+1;
             end    
 
@@ -102,6 +117,8 @@ for expt_n = 1:length(expts)
         N = length(choice_order);
         lenH=length(H_vec);
         indH=0;
+        
+        Y_hat_bin_num = 10;
 
         for H=H_vec
             tic;
@@ -157,10 +174,11 @@ for expt_n = 1:length(expts)
              
         end
         
-        [C,ia,ic] = unique(yhat);
+%         [C,ia,ic] = unique(yhat);
+
         yhat_counts = [];
-        for i = 1:length(ia)
-            yhat_counts(i) = length(find(ic == ia(i)));
+        for i = 1:Y_hat_bin_num
+            yhat_counts(i) = length(find( yhat<=((i+1)/Y_hat_bin_num))) - sum(yhat_counts);
         end
         
         P_Yhat = yhat_counts/sum(yhat_counts);
@@ -174,16 +192,16 @@ for expt_n = 1:length(expts)
         yhatg0_counts = [];
         Y_0_ids = find(Yi == 0);
         
-        [C,ia,ic] = unique(yhat(Y_1_ids));
-        
-        for i = 1:length(ia)
-            yhatg1_counts(i) = length(find(ic == ia(i)));
+%         [C,ia,ic] = unique(yhat(Y_1_ids));
+%         
+        for i = 1:Y_hat_bin_num
+            yhatg1_counts(i) = length(find(yhat(Y_1_ids) <= ((i+1)/Y_hat_bin_num))) - sum(yhatg1_counts);
         end
         
-        [C,ia,ic] = unique(yhat(Y_0_ids));
-        
-        for i = 1:length(ia)
-            yhatg0_counts(i) = length(find(ic == ia(i)));
+%         [C,ia,ic] = unique(yhat(Y_0_ids));
+%         
+        for i = 1:Y_hat_bin_num
+            yhatg0_counts(i) = length(find(yhat(Y_0_ids) <= ((i+1)/Y_hat_bin_num))) - sum(yhatg0_counts);
         end
         
         P_yhatg1 = yhatg1_counts/sum(yhatg1_counts);
@@ -201,18 +219,17 @@ for expt_n = 1:length(expts)
         
         MI_yhat(expt_n,count) = H_yhat - H_yhatgX;
         
-        
      %% MI for sugrue predictor with current choice   
         v1 = [];
         v2 = [];
         v = [];
         pred_choice = [];
         [tau,beta] = sugrue_like_model_mult_tau_bias_singleFly(cond,tau_list,beta_list);
-        for t_num = 11:length(choice_order)
+        for t_num = 4:length(choice_order)
             choices = [];
             rewards = [];
-            choices = choice_order(t_num-10 : t_num - 1);
-            rewards = reward_order(t_num-10 : t_num - 1);
+            choices = choice_order(t_num-3 : t_num - 1);
+            rewards = reward_order(t_num-3 : t_num - 1);
             v1_list = [];
             v2_list = [];
             for ct = 1:length(choices)
@@ -232,25 +249,28 @@ for expt_n = 1:length(expts)
                     end
                 end 
             end   
+            if tau == 0
+                tau = 0.001
+            end    
             exp_w_list = exp((tau - [1:length(choices)]+1)/tau)./exp(1);     
             valid_els_1 = find(flip(v1_list)~= -1);   
             valid_els_2 = find(flip(v2_list) ~= -1); 
             flip_v1_list = flip(v1_list);
             flip_v2_list = flip(v2_list);
             % exp weighted sum for value
-            v1(t_num-10) = sum((exp_w_list(valid_els_1)).*flip_v1_list(valid_els_1));
-            v2(t_num-10) = sum((exp_w_list(valid_els_2)).*flip_v2_list(valid_els_2));
-            v(t_num-10) = 1/(1+exp(-beta*(v1(t_num-10) - v2(t_num-10))));
+            v1(t_num-3) = sum((exp_w_list(valid_els_1)).*flip_v1_list(valid_els_1));
+            v2(t_num-3) = sum((exp_w_list(valid_els_2)).*flip_v2_list(valid_els_2));
+            v(t_num-3) = 1/(1+exp(-beta*(v1(t_num-3) - v2(t_num-3))));
         end
 
         [C,ia,ic] = unique(v);
         v_counts = [];
-        for i = 1:length(ia)
-            v_counts(i) = length(find(ic == ia(i)));
+        for i = 1:Y_hat_bin_num
+            v_counts(i) = length(find( v<=((i+1)/Y_hat_bin_num))) - sum(v_counts);
         end
         
-        P_Yhat = v_counts/sum(v_counts);
-        U = P_Yhat.*log(P_Yhat);
+        P_v = v_counts/sum(v_counts);
+        U = P_v.*log(P_v);
         U_nan = isnan(U);
         U(find(U_nan == 1)) = 0;
         H_v = -sum(U);
@@ -260,15 +280,16 @@ for expt_n = 1:length(expts)
         
         [C,ia,ic] = unique(v(Y_1_ids));
         
-        for i = 1:length(ia)
-            vg1_counts(i) = length(find(ic == ia(i)));
+        for i = 1:Y_hat_bin_num
+            vg1_counts(i) = length(find( v(Y_1_ids)<=((i+1)/Y_hat_bin_num))) - sum(vg1_counts);
+        
         end
         
         [C,ia,ic] = unique(v(Y_0_ids));
         
-        for i = 1:length(ia)
-            vg0_counts(i) = length(find(ic == ia(i)));
-        end
+        for i = 1:Y_hat_bin_num
+            vg0_counts(i) = length(find( v(Y_0_ids)<=((i+1)/Y_hat_bin_num))) - sum(vg0_counts);
+         end
         
         P_vg1 = vg1_counts/sum(vg1_counts);
         P_vg0 = vg0_counts/sum(vg0_counts);
@@ -284,6 +305,6 @@ for expt_n = 1:length(expts)
         H_vgX = (sum(vg1_counts)/(sum(vg1_counts)+sum(vg0_counts)))*H_vg1 + (sum(vg0_counts)/(sum(vg1_counts)+sum(vg0_counts)))*H_vg0;
         
         MI_v(expt_n,count) = H_v - H_vgX;
-%         keyboard
+
     end
-end    
+end

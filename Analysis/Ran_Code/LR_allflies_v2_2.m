@@ -21,7 +21,7 @@ Pc_mat = {};
 P2_mat = {};
 LossLOU_mat = {};
 
-for expt_n = 3:length(expts)
+for expt_n = 1:2%length(expts)
     expt_name = expts{expt_n, 1};
     cd(expt_name)
     conds = dir(expt_name);
@@ -33,6 +33,14 @@ for expt_n = 3:length(expts)
         if startsWith(conds(cond_n).name, '.')
             
             continue
+        elseif expt_n == 1
+            if ismember(cond_n,[1,4,5,7,8,11,13,14,15,16,17,18]+2)
+                continue
+            end
+        elseif expt_n == 2
+            if ismember(cond_n,[4,5,9,11,12,13,15,16,17,18,19,20]+2)
+                continue
+            end
         end
 
         count = count+1;

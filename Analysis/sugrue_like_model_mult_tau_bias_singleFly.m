@@ -156,8 +156,8 @@ function [tau_fig,beta_fig] = sugrue_like_model_mult_tau_bias_singleFly(cond,tau
     end
 
     %%Plotting
-    open('figure7.fig')
-    keyboard
+%     open('figure7.fig')
+%     keyboard
     hold on
     [maxLL_tau,maxLL_taus] = max(LL_mat(count,:,:));
     [maxLL,maxLL_beta_n] = max(max(LL_mat(count,:,:)));
@@ -170,10 +170,10 @@ function [tau_fig,beta_fig] = sugrue_like_model_mult_tau_bias_singleFly(cond,tau
     end
     plot([10:length(choice_order)-1],smoothed_pred_choice*90,'LineWidth',4,'Color',[0.75,0,0.75])
 %         plot([2:240],plotting_choice(tau_fig,:)*90,'LineWidth',4,'Color',[0.75,0,0.75])
-    keyboard
-    filename = sprintf('data_sugrueModel_withExp_smoothed_tau_%d_beta_%d.fig',tau_fig,beta_fig);
-    savefig(filename)
-    keyboard
+%     keyboard
+%     filename = sprintf('data_sugrueModel_withExp_smoothed_tau_%d_beta_%d.fig',tau_fig,beta_fig);
+%     savefig(filename)
+%     keyboard
     close all
 
         

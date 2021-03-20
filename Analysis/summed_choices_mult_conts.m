@@ -61,6 +61,33 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
     
     choice_order = [] ;
     reward_order = [];
+    
+    % FOR OLD EXPTS
+%     for i = 2:length(summed_choices_ends)
+%         if summed_choices_ends(i-1) ~= summed_choices_ends(i)
+%             if summed_M_choices_ends(i-1) ~= summed_M_choices_ends(i)
+%                 choice_order(length(choice_order)+1) = 1;
+%                 if protocol_100_0 ~= 1
+%                     if reward(1,length(choice_order)) == 1
+%                         reward_order(length(choice_order)) = 1;
+%                     elseif reward(1,length(choice_order)) == 0
+%                         reward_order(length(choice_order)) = 0;
+%                     end
+%                 end    
+%             elseif summed_O_choices_ends(i-1) ~= summed_O_choices_ends(i)
+%                 choice_order(length(choice_order)+1) = 2;
+%                 if protocol_100_0 ~= 1
+%                     if reward(1,length(choice_order)) == 1
+%                       reward_order(length(choice_order)) = 2;
+%                     elseif reward(1,length(choice_order)) == 0
+%                         reward_order(length(choice_order)) = 0;
+%                     end 
+%                 end    
+%             end
+%         end    
+%     end
+    % FOR CURRENT EXPTS
+    
     for i = 2:length(summed_choices_ends)
         if summed_choices_ends(i-1) ~= summed_choices_ends(i)
             if summed_M_choices_ends(i-1) ~= summed_M_choices_ends(i)
@@ -113,10 +140,13 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
 %             
 % 
 %     end
-%     
+    
     num_O_rewarded = length(find(reward_order == 2));
     num_M_rewarded = length(find(reward_order == 1));
     ave_reward_slope = (num_O_rewarded/num_M_rewarded);
+%     if isnan(ave_reward_slope)
+%         ave_reward_slope = 1
+%     end    
 
 % This is how lines will be defined for experiments where first set of
 % trials involve no reward and second set of trials have OCT100:MCH0

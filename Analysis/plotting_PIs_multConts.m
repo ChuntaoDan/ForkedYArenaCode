@@ -102,7 +102,7 @@ function [] = plotting_PIs_multConts(save_fig,lookback)
                 end    
                 cont_switch(num_figs+1) = length(x_y_time_color.time);
                     for k = 1:num_figs
-                       
+                        keyboard
                         figure(fig_count+1)
                         fig_count = fig_count+1
                         hold on
@@ -227,7 +227,7 @@ function [] = plotting_PIs_multConts(save_fig,lookback)
                         pre_sumO = summed_O_choices_ends(end);
                         pre_sum = summed_choices_ends(end);
                     end
-                    
+                    keyboard
                     inst_choice_ratio =[];
                     if conts > 1
                         [inst_choice_ratio,inst_income_ratio,ave_choice_ratios(expt_n,cond_n-2,conts),fig_count,ave_reward_ratios(expt_n,cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order,reward_order,lookback,conts,pre_sum,baiting,reward,gotofig2)

@@ -38,7 +38,7 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
     p_switching_g_Nreward = [];
     p_switching_g_reward =[];
     
-    for expt_n = 4:length(expts)
+    for expt_n = 1:length(expts)
         expt_name = expts{expt_n, 1};
         cd(expt_name)
         conds = dir(expt_name);
@@ -48,6 +48,15 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
             if startsWith(conds(cond_n).name, '.')
                 count = count+1;
                 continue
+                %SELECTING GOOD EXPTS BASED ON MI FOR GR64f
+%             elseif expt_n == 1
+%                 if ismember(cond_n,[1,4,5,7,8,11,13,14,15,16,17,18]+2)
+%                     continue
+%                 end
+%             elseif expt_n == 2
+%                 if ismember(cond_n,[4,5,9,11,12,13,15,16,17,18,19,20]+2)
+%                     continue
+%                 end
             end
               
             choice_order = [];
@@ -70,9 +79,11 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
             end    
             
             if length_conts == 4
-                subt = 1;
+                subt = 3; %1;
+            elseif length_conts == 7
+                subt = 6;
             else
-                subt = 3;
+                subt = 17;
             end    
             
             for conts = 1:length_conts-subt % this set of expts has 3 conts
@@ -249,12 +260,12 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                     
                     inst_choice_ratio =[];
                     if conts > 1
-                        [inst_choice_ratio,inst_income_ratio,ave_choice_ratios(expt_n,cond_n-2,conts),ave_choice_ratios_sec_half(expt_n,cond_n-2,conts),fig_count,ave_reward_ratios(expt_n,cond_n-2,conts),ave_reward_ratios_sec_half(expt_n,cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,pre_sum,baiting,reward,gotofig2)
+                        [inst_choice_ratio(cond_n-2,:),inst_income_ratio,ave_choice_ratios(expt_n,cond_n-2,conts),ave_choice_ratios_sec_half(expt_n,cond_n-2,conts),fig_count,ave_reward_ratios(expt_n,cond_n-2,conts),ave_reward_ratios_sec_half(expt_n,cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,pre_sum,baiting,reward,gotofig2)
                         pre_sumM = summed_M_choices_ends(end) ;
                         pre_sumO = summed_O_choices_ends(end);
                         pre_sum = summed_choices_ends(end);
                     else
-                        [inst_choice_ratio,inst_income_ratio,ave_choice_ratios(expt_n,cond_n-2,conts),ave_choice_ratios_sec_half(expt_n,cond_n-2,conts),fig_count,ave_reward_ratios(expt_n,cond_n-2,conts),ave_reward_ratios_sec_half(expt_n,cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,0,baiting,reward,gotofig2)
+                        [inst_choice_ratio(cond_n-2,:),inst_income_ratio,ave_choice_ratios(expt_n,cond_n-2,conts),ave_choice_ratios_sec_half(expt_n,cond_n-2,conts),fig_count,ave_reward_ratios(expt_n,cond_n-2,conts),ave_reward_ratios_sec_half(expt_n,cond_n-2,conts),gotofig2] = inst_CR_mult_conts(fig_count,protocol_100_0,choice_order(:,conts),reward_order(:,conts),lookback,conts,0,baiting,reward,gotofig2)
                     end
                     
                     
@@ -416,12 +427,12 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
             end   
             % THIS NEEDS TO BE CHANGED AS AND WHEN MORE FIGURE ARE
                     % GENERATED
-            if save_fig == 1 &&  exist('figure1.fig') ~= 2
+            if save_fig == 1 %&&  exist('figure1.fig') ~= 2
 
                 for fc = 1:fig_count
-                    if fig_count == gotofig
+                    if fc == gotofig
                         saveas(figure(gotofig),'summed_choices_ends.fig')
-                    elseif fig_count == gotofig2
+                    elseif fc == gotofig2
                         saveas(figure(gotofig2),'inst_CR_lb10.fig')
                     else
                         saveas(figure(fc),sprintf('figure%d.fig',fc))
@@ -452,6 +463,9 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
             end
             save('choice_order.mat','choice_order')
             save('reward_order.mat','reward_order')
+            save('inst_CR.mat','inst_choice_ratio')
+            save('O_choice.mat','summed_O_choices_ends')
+            save('M_choice.mat','summed_M_choices_ends')
 %                        
             fig_count = 0;
             close all
@@ -482,10 +496,10 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
 %     
     cd(expt_name)
     
-    save('ave_CR.mat','ave_choice_ratios')
-    save('ave_IR.mat','ave_reward_ratios')
-    save('ave_CR_sec_half.mat','ave_choice_ratios_sec_half')
-    save('ave_IR_sec_half.mat','ave_reward_ratios_sec_half')
+    save('ave_CR_100_0.mat','ave_choice_ratios')
+    save('ave_IR_100_0.mat','ave_reward_ratios')
+    save('ave_CR_sec_100_0.mat','ave_choice_ratios_sec_half')
+    save('ave_IR_sec_100_0.mat','ave_reward_ratios_sec_half')
     
     % 
     % figure(101)
