@@ -1,7 +1,7 @@
 % clc
 % clear
 % close all
-function [tau_fig,beta_fig,LL_mat] = sugrue_like_model_mult_tau_bias()
+function [tau_fig,beta_fig,LL_mat,LossLOU_mat] = sugrue_like_model_mult_tau_bias()
     count = 0
     tau_list = input('enter time-scales of lookback window as a vector');
     beta_list = input('enter beta list');
@@ -21,7 +21,7 @@ function [tau_fig,beta_fig,LL_mat] = sugrue_like_model_mult_tau_bias()
     typ_p = [];
 
 
-    for expt_n = 1:length(expts)
+    for expt_n = 1:2%length(expts)
         expt_name = expts{expt_n, 1};
         cd(expt_name)
         conds = dir(expt_name);
@@ -33,6 +33,14 @@ function [tau_fig,beta_fig,LL_mat] = sugrue_like_model_mult_tau_bias()
             if startsWith(conds(cond_n).name, '.')
 
                 continue
+            elseif expt_n == 1
+                if ismember(cond_n,[1,4,5,7,8,9,11,13,14,15,16,17,18,22]+3)
+                    continue
+                end
+            elseif expt_n == 2
+                if ismember(cond_n,[4,5,6,9,11,12,13,15,16,17,18,19,20]+2)
+                    continue
+                end
             end
 
     %         if cond_n == 8
@@ -189,9 +197,9 @@ function [tau_fig,beta_fig,LL_mat] = sugrue_like_model_mult_tau_bias()
             tau_fig(count) = tau_list(maxLL_tau_n);
             beta_fig(count) = beta_list(maxLL_beta_n);
             smoothed_pred_choice = [];
-            for i = 10:length(choice_order)-1
-                smoothed_pred_choice(i-9,:) = mean(plotting_choice(find(tau_list == tau_fig(count)),find(beta_list == beta_fig(count)),i-9:i));
-            end
+%             for i = 10:length(choice_order)-1
+%                 smoothed_pred_choice(i-9,:) = mean(plotting_choice(find(tau_list == tau_fig(count)),find(beta_list == beta_fig(count)),i-9:i));
+%             end
 %             plot([10:length(choice_order)-1],smoothed_pred_choice*90,'LineWidth',4,'Color',[0.75,0,0.75])
 %     %         plot([2:240],plotting_choice(tau_fig,:)*90,'LineWidth',4,'Color',[0.75,0,0.75])
 %             filename = sprintf('data_sugrueModel_withExp_smoothed_tau_%d_beta_%d.fig',tau_fig(count),beta_fig(count));

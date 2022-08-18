@@ -1,4 +1,4 @@
-function [tau_fig,beta_fig] = sugrue_like_model_mult_tau_bias_singleFly(cond,tau_list,beta_list)
+function [tau_fig,beta_fig] = sugrue_like_model_mult_tau_bias_singleFly(cond,beta_list,tau_list)
 
 %     tau_list = input('enter time-scales of lookback window as a vector');
 %     beta_list = input('enter beta list');
@@ -174,7 +174,7 @@ function [tau_fig,beta_fig] = sugrue_like_model_mult_tau_bias_singleFly(cond,tau
 %     filename = sprintf('data_sugrueModel_withExp_smoothed_tau_%d_beta_%d.fig',tau_fig,beta_fig);
 %     savefig(filename)
 %     keyboard
-    close all
+%     close all
 
         
 end

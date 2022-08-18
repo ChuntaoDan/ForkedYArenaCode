@@ -1,4 +1,4 @@
-function [summed_choices_ends,summed_O_choices_ends, summed_P_O_choices_ends,summed_M_choices_ends, summed_P_M_choices_ends,fig_count,net_summed_choices,gotofig,gotofig3] = summed_choices_mult_conts_3odor(cps,x_y_time_color,fig_count,protocol_100_0,reward,conts,gotofig,gotofig3,pre_sumM, pre_sumO,pre_sumPO,pre_sumPM)
+function [summed_choices_ends,summed_O_choices_ends, summed_P_O_choices_ends,summed_M_choices_ends, summed_P_M_choices_ends,fig_count,net_summed_choices,gotofig,gotofig3,choice_order,reward_order] = summed_choices_mult_conts_3odor(cps,x_y_time_color,fig_count,protocol_100_0,reward,conts,gotofig,gotofig3,pre_sumM, pre_sumO,pre_sumPO,pre_sumPM)
     
     
     color_vec = cbrewer('qual','Dark2',10,'cubic');
@@ -61,31 +61,40 @@ function [summed_choices_ends,summed_O_choices_ends, summed_P_O_choices_ends,sum
     summed_P_O_choices_ends = summed_P_O_choices_ends + pre_sumPO;
     net_summed_choices = summed_M_choices_ends + summed_O_choices_ends+summed_P_M_choices_ends+summed_P_O_choices_ends;
     
-%     choice_order = [] ;
-%     reward_order = [];
-%     for i = 2:length(summed_choices_ends)
-%         if summed_choices_ends(i-1) ~= summed_choices_ends(i)
-%             if summed_M_choices_ends(i-1) ~= summed_M_choices_ends(i)
-%                 choice_order(length(choice_order)+1) = 1;
-%                 if protocol_100_0 ~= 1
-%                     if reward(2,length(choice_order)) == 1
-%                         reward_order(length(choice_order)) = 1;
-%                     elseif reward(2,length(choice_order)) == 0
-%                         reward_order(length(choice_order)) = 0;
-%                     end
-%                 end    
-%             elseif summed_O_choices_ends(i-1) ~= summed_O_choices_ends(i)
-%                 choice_order(length(choice_order)+1) = 2;
-%                 if protocol_100_0 ~= 1
-%                     if reward(1,length(choice_order)) == 1
-%                       reward_order(length(choice_order)) = 2;
-%                     elseif reward(1,length(choice_order)) == 0
-%                         reward_order(length(choice_order)) = 0;
-%                     end 
-%                 end    
-%             end
-%         end    
-%     end
+    choice_order = [] ;
+    reward_order = [];
+    for i = 2:length(summed_choices_ends)
+        if summed_choices_ends(i-1) ~= summed_choices_ends(i)
+            if summed_M_choices_ends(i-1) ~= summed_M_choices_ends(i)
+                choice_order(length(choice_order)+1) = 1;
+                if protocol_100_0 ~= 1
+                    if reward(2,length(choice_order)) == 1
+                        reward_order(length(choice_order)) = 1;
+                    elseif reward(2,length(choice_order)) == 0
+                        reward_order(length(choice_order)) = 0;
+                    end
+                end    
+            elseif summed_O_choices_ends(i-1) ~= summed_O_choices_ends(i)
+                choice_order(length(choice_order)+1) = 2;
+                if protocol_100_0 ~= 1
+                    if reward(1,length(choice_order)) == 1
+                      reward_order(length(choice_order)) = 2;
+                    elseif reward(1,length(choice_order)) == 0
+                        reward_order(length(choice_order)) = 0;
+                    end 
+                end
+            elseif summed_P_O_choices_ends(i-1) ~= summed_P_O_choices_ends(i)||summed_P_M_choices_ends(i-1) ~= summed_P_M_choices_ends(i)
+                choice_order(length(choice_order)+1) = 3;
+                if protocol_100_0 ~= 1
+                    if reward(1,length(choice_order)) == 1
+                      reward_order(length(choice_order)) = 3;
+                    elseif reward(1,length(choice_order)) == 0
+                        reward_order(length(choice_order)) = 0;
+                    end 
+                end    
+            end
+        end    
+    end
 %     
 %     num_O_rewarded = 0;
 %     num_M_rewarded = 0;

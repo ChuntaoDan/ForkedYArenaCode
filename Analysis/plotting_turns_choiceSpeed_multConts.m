@@ -1,4 +1,4 @@
-function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT, choice_time_full_MCH, choice_time_from_entry_OCT, choice_time_from_entry_MCH] = plotting_turns_choiceSpeed_multConts()
+function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT, choice_time_full_MCH, choice_time_from_entry_OCT, choice_time_from_entry_MCH] = plotting_turns_choiceSpeed_multconts()
 %     close all
 %     clear
 %     clc
@@ -35,24 +35,38 @@ function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT
     M_A_Color = color_vec(7,:);
     M_O_Color = 0.7*color_vec(7,:);
     
-    for expt_n = 1:length(expts)
+    for expt_n = 1:2%length(expts)
         expt_name = expts{expt_n, 1};
         cd(expt_name)
         conds = dir(expt_name);
 
-        for cond_n = 1:length(conds)
+        for cond_n =1:length(conds)
+            count_data = count_data+1;
             % Skip the folders containing '.'
             if startsWith(conds(cond_n).name, '.')
-
+                
                 continue
+                %SKIPPING LOW MI EXPTS FOR GR64f
+%             elseif expt_n == 1
+%                 if ismember(cond_n,[1,4,5,7,8,11,13,14,15,16,17,18]+2)
+%                     continue
+%                 end
+%             elseif expt_n == 2
+%                 if ismember(cond_n,[4,5,9,11,12,13,15,16,17,18,19,20]+2)
+%                     continue
+%                 end
+
             end
-            count_data = count_data+1;
+              
             choice_order = [];
             reward_order = [];
 
             % Change directory to file containing flycounts 
             cond = strcat(expt_name, '/', conds(cond_n).name);
             cd(cond)
+%             if exist('figure1.fig')==2
+%                 continue
+%             end    
             gotofig = 0;
             gotofig2 = 0;
             conts = dir(cond);
@@ -62,9 +76,27 @@ function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT
                     length_conts = length_conts + 1;
                 end
             end    
-            for conts = 1:length_conts-3 % this set of expts has 3 conts
+
+            if length_conts == 9
+                subt = 8;
+            elseif length_conts == 12
+                subt = 10;
+            elseif length_conts == 16
+                subt = 13;
+            elseif length_conts == 15
+                subt = 12;
+            else    
+                subt = 9;
+            end  
+            
+%             for conts = [1,1.25,1.75,2.25]
+%                 conts_name = conts;
+%                 conts = find([1,1.25,1.75,2.25]==conts_name);
+%             for conts = 1:0.75:1.75% THIS IS SOME WEIRDNESS FOR twoblock 100-0 expts remove for others 
+              for conts = 1:length_conts-subt % this set of expts has 3 conts
+               % this set of expts has 3 conts
                 
-                load(sprintf('all_variables_contingency_%d',conts))
+                load(sprintf('all_variables_contingency_%d.mat',conts))
                    
                 exist reward
                 if ans == 0 
@@ -82,10 +114,12 @@ function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT
                 [pi,cps] = preference_index_multConts(air_arm,right_left,x_y_time_color);
                 [a,b,c,d,arm_bias_pi] = arm_bias(air_arm,right_left);
 
-                individual_pi(expt_n,cond_n-2,conts) = pi;
-                arm_bias_expected_pi(expt_n,cond_n-2,conts) = arm_bias_pi;
-                cpms(expt_n,cond_n-2,conts) = choicesperminute(air_arm,time);
-                
+                individual_pi(expt_n,cond_n-2,ceil(conts)) = pi;
+                arm_bias_expected_pi(expt_n,cond_n-2,ceil(conts)) = arm_bias_pi;
+                cpms(expt_n,cond_n-2,ceil(conts)) = choicesperminute(air_arm,time);
+
+% THE FOLLOWING COMMENTED SECIONT IS A SECOND METHOD FOR CALCULATING TURSN
+% THAT WAS NOT USED IN THE PAPER. 
 %                 dua = x_y_time_color.distance_up_arm;
 %                 peak_count_MCH = 0;
 %                 peak_count_OCT = 0;
@@ -102,15 +136,15 @@ function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT
 %                         if sum(x_y_time_color.color(tp+k,:) == O_A_Color)== 3 ||sum(x_y_time_color.color(tp+k,:) == O_M_Color)== 3
 %                             peak_count_OCT = peak_count_OCT + 1;
 %                             [tempPks,tempLocs] = findpeaks(dua(tp:end),'MinPeakProminence',20);
-%                             local_maxima_OCT(count_data,conts,peak_count_OCT) = tempPks(1);
-%                             locs_OCT(count_data,conts,peak_count_OCT) = tempLocs(1)+tp;
+%                             local_maxima_OCT(count_data,ceil(conts),peak_count_OCT) = tempPks(1);
+%                             locs_OCT(count_data,ceil(conts),peak_count_OCT) = tempLocs(1)+tp;
 %                             tp = tempLocs(1)+tp;
 %                             k = 100
 %                         elseif sum(x_y_time_color.color(tp+k,:) == M_A_Color)== 3 ||sum(x_y_time_color.color(tp+k,:) == M_O_Color)== 3
 %                             peak_count_MCH = peak_count_MCH + 1;
 %                             [tempPks,tempLocs] = findpeaks(dua(tp:end),'MinPeakProminence',20);
-%                             local_maxima_MCH(count_data,conts,peak_count_MCH) = tempPks(1);
-%                             locs_MCH(count_data,conts,peak_count_MCH) = tempLocs(1)+tp;
+%                             local_maxima_MCH(count_data,ceil(conts),peak_count_MCH) = tempPks(1);
+%                             locs_MCH(count_data,ceil(conts),peak_count_MCH) = tempLocs(1)+tp;
 %                             tp = tempLocs(1)+tp;
 %                             k = 100
 %                         end
@@ -225,7 +259,7 @@ function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT
 %                     
 %                 end  
                     
-                choice_time_full(count_data,conts,1:length(cps)-1) = cps(2:end)-cps(1:end-1);
+                choice_time_full(count_data,ceil(conts),1:length(cps)-1) = cps(2:end)-cps(1:end-1);
                 c_OCT = 0;
                 c_MCH = 0;
                 for ch = 1:length(cps)-1
@@ -252,16 +286,16 @@ function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT
                         continue
                     end    
                     
-                    choice_time_from_entry(count_data,conts,ch) = cps(ch+1) - cps(ch) - first_chosen_arm_entry;
+                    choice_time_from_entry(count_data,ceil(conts),ch) = cps(ch+1) - cps(ch) - first_chosen_arm_entry;
                 
                     if sum(x_y_time_color.color(cps(ch+1)-1,:) == O_A_Color)== 3 ||sum(x_y_time_color.color(cps(ch+1)-1,:) == O_M_Color)== 3
                         c_OCT = c_OCT + 1;  
-                        choice_time_from_entry_OCT(count_data,conts,c_OCT) = choice_time_from_entry(count_data,conts,ch);
-                        choice_time_full_OCT(count_data,conts,c_OCT) = choice_time_full(count_data,conts,ch);
+                        choice_time_from_entry_OCT(count_data,ceil(conts),c_OCT) = choice_time_from_entry(count_data,ceil(conts),ch);
+                        choice_time_full_OCT(count_data,ceil(conts),c_OCT) = choice_time_full(count_data,ceil(conts),ch);
                     elseif sum(x_y_time_color.color(cps(ch+1)-1,:) == M_A_Color)== 3 ||sum(x_y_time_color.color(cps(ch+1)-1,:) == M_O_Color)== 3
                         c_MCH = c_MCH + 1;  
-                        choice_time_from_entry_MCH(count_data,conts,c_MCH) = choice_time_from_entry(count_data,conts,ch);
-                        choice_time_full_MCH(count_data,conts,c_MCH) = choice_time_full(count_data,conts,ch);
+                        choice_time_from_entry_MCH(count_data,ceil(conts),c_MCH) = choice_time_from_entry(count_data,ceil(conts),ch);
+                        choice_time_full_MCH(count_data,ceil(conts),c_MCH) = choice_time_full(count_data,ceil(conts),ch);
                     end
 
                 end  
@@ -269,8 +303,8 @@ function [p_r_OCT,choice_time_full, choice_time_from_entry, choice_time_full_OCT
                 
                 
                 
-                p_r_OCT(count_data,conts,ch) = x;
-                
+                p_r_OCT(count_data,ceil(conts),ch) = x;
+
                
                 
             end

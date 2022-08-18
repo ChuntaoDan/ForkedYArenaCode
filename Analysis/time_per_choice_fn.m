@@ -1,4 +1,6 @@
-function [time_per_choice]  = time_per_choice_fn(x_y_time_color,cps)
+%% ERROR IN THIS CODE CHANGE jj TO kk IN ALL THE MOST NESTED IF STATEMENTS
+
+function [time_per_choice, time_per_choice_center]  = time_per_choice_fn(x_y_time_color,cps)
     time_per_choice = [];
     ct = 0;
     color_vec = cbrewer('qual','Dark2',10,'cubic')
@@ -24,7 +26,7 @@ function [time_per_choice]  = time_per_choice_fn(x_y_time_color,cps)
                 jj = kk;
                 while no_match == 2
                     jj = jj+1;
-                    if sum(x_y_time_color.color(cps(i)-kk,:) == M_A_Color)~=3
+                    if sum(x_y_time_color.color(cps(i)-jj,:) == M_A_Color)~=3
                         no_match = 0;
                         end_pt = x_y_time_color.time(cps(i)-jj);
                     end
@@ -35,7 +37,7 @@ function [time_per_choice]  = time_per_choice_fn(x_y_time_color,cps)
                 jj = kk;
                 while no_match == 2
                     jj = jj+1;
-                    if sum(x_y_time_color.color(cps(i)-kk,:) == O_A_Color)~=3
+                    if sum(x_y_time_color.color(cps(i)-jj,:) == O_A_Color)~=3
                         no_match = 0;
                         end_pt = x_y_time_color.time(cps(i)-jj);
                     end
@@ -46,7 +48,7 @@ function [time_per_choice]  = time_per_choice_fn(x_y_time_color,cps)
                 jj = kk;
                 while no_match == 2
                     jj = jj+1;
-                    if sum(x_y_time_color.color(cps(i)-kk,:) == O_M_Color)~=3
+                    if sum(x_y_time_color.color(cps(i)-jj,:) == O_M_Color)~=3
                         no_match = 0;
                         end_pt = x_y_time_color.time(cps(i)-jj);
                     end
@@ -57,7 +59,7 @@ function [time_per_choice]  = time_per_choice_fn(x_y_time_color,cps)
                 jj = kk;
                 while no_match == 2
                     jj = jj+1;
-                    if sum(x_y_time_color.color(cps(i)-kk,:) == M_O_Color)~=3
+                    if sum(x_y_time_color.color(cps(i)-jj,:) == M_O_Color)~=3
                         no_match = 0;
                         end_pt = x_y_time_color.time(cps(i)-jj);
                     end
@@ -65,5 +67,6 @@ function [time_per_choice]  = time_per_choice_fn(x_y_time_color,cps)
             end
         end
         time_per_choice(ct) = start_pt-end_pt;
+        keyboard
     end
 end    

@@ -41,10 +41,15 @@ function [x_y_time_color] = plot_position_choices(region_at_time,xy,timestamps,a
         %DISTANCE TRAVELLED UP ARM RELATIVE TO A SKELETON IN THE CENTER OF
         %THE ARM.
         
-        p0 = [413,648];
-        v1 = [403,176;413,648];
-        v2 = [829,875;413,648];
-        v3 = [13,895;413,648];
+%         p0 = [413,648];
+%         v1 = [403,176;413,648];
+%         v2 = [829,875;413,648];
+%         v3 = [13,895;413,648];
+
+        p0 = [554,643];
+        v1 = [544,172;554,643];
+        v2 = [964,878;554,643];
+        v3 = [151,886;554,643];
         
         if region_at_time(i) == 1||region_at_time(i) == 4||region_at_time(i) == 7
             pt_on_line = proj_pt(v1,[xy(1,i),xy(2,i)]);

@@ -23,9 +23,15 @@ function [peaks] = plotting_turns_multConts()
     color_vec = cbrewer('qual','Dark2',10,'cubic');
     Air_Color = 0*color_vec(6,:);
     O_A_Color = color_vec(1,:);
-    O_M_Color = 0.6*color_vec(1,:);
+    O_P_Color = 0.6*color_vec(1,:);
+    O_AirWall_Color = 0.5*color_vec(1,:);
+    P_A_Color = color_vec(3,:);
+    P_O_Color = 0.6*color_vec(3,:);
+    P_AirWall_Color = 0.5*color_vec(3,:);
     M_A_Color = color_vec(7,:);
-    M_O_Color = 0.7*color_vec(7,:);
+    M_P_Color = 0.7*color_vec(7,:);
+    M_AirWall_Color = 0.5*color_vec(7,:);
+    P_M_Color = 0.6*color_vec(3,:);
     
     for expt_n = 1:length(expts)
         expt_name = expts{expt_n, 1};
@@ -88,9 +94,19 @@ function [peaks] = plotting_turns_multConts()
                 dua = x_y_time_color.distance_up_arm;
                 times = x_y_time_color.time;
                 colors = x_y_time_color.color;
+                
+                for i = 1:length(dua)
+                    if sum(colors(i,:) == O_AirWall_Color) == 3 ||sum(colors(i,:) == P_AirWall_Color) == 3 ||sum(colors(i,:) == M_AirWall_Color) == 3 
+                        dua(i) = -dua(i);
+                    end
+                end   
+                
+                
+                times =  x_y_time_color.time(lists);
+                
                 lists = find(dua < 415);
                 dua = x_y_time_color.distance_up_arm(lists);
-                times =  x_y_time_color.time(lists);
+                
                 lists2 = find(dua == 0);  
                 if lists2(1) == 1
                     lists2 = lists2(2:end);

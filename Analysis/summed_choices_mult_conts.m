@@ -144,9 +144,9 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
     num_O_rewarded = length(find(reward_order == 2));
     num_M_rewarded = length(find(reward_order == 1));
     ave_reward_slope = (num_O_rewarded/num_M_rewarded);
-%     if isnan(ave_reward_slope)
-%         ave_reward_slope = 1
-%     end    
+    if isnan(ave_reward_slope)
+        ave_reward_slope = 1
+    end    
 
 % This is how lines will be defined for experiments where first set of
 % trials involve no reward and second set of trials have OCT100:MCH0
@@ -203,6 +203,7 @@ function [summed_choices_ends, summed_choices_center,summed_O_choices_ends, summ
         line2_y = line1_y1 : line1_y2;
         line2_x = (([1:length(line1_y)])/ave_reward_slope) + pre_sumM;
     end    
+
     if conts == 1
         figure(fig_count+1)
         gotofig = fig_count+1;

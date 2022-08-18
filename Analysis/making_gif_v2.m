@@ -1,5 +1,5 @@
 % Create figure
-figure1 = figure('Color',[0 0 0]);
+figure1 = figure();
 
 % Create axes
 axes1 = axes('Parent',figure1,...
@@ -8,10 +8,10 @@ hold(axes1,'on');
 
 
 % Create ylabel
-ylabel('# of Correct Choices','Color',[1 1 1]);
+ylabel('# of Correct Choices');
 
 % Create xlabel
-xlabel('# of Incorrect Choices','Color',[1 1 1]);
+xlabel('# of Incorrect Choices');
 
 % Uncomment the following line to preserve the X-limits of the axes
 % xlim(axes1,[0 90]);
@@ -19,8 +19,8 @@ xlabel('# of Incorrect Choices','Color',[1 1 1]);
 % ylim(axes1,[0 90]);
 box(axes1,'on');
 % Set the remaining axes properties
-set(axes1,'FontSize',16,'XColor',[1 1 1],'XTick',[0 45 90],'YColor',[1 1 1],...
-    'YTick',[0 45 90],'ZColor',[1 1 1]);
+set(axes1,'FontSize',16,'XTick',[0 45 90],...
+    'YTick',[0 45 90]);
 
 % Create textbox
 annotation(figure1,'textbox',...

@@ -21,7 +21,7 @@ for expt_n = 1:length(expts)
     cd(expt_name)
     conds = dir(expt_name);
     count = 0;
-    for cond_n = 1:length(conds)-4
+    for cond_n = 1:length(conds)
         % Skip the folders containing '.'
         if startsWith(conds(cond_n).name, '.')
             

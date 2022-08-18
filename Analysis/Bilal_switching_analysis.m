@@ -23,8 +23,8 @@ M_A_Color = color_vec(7,:);
 M_O_Color = 0.7*color_vec(7,:);
 
 CR = [];
-
-for expt_n = 1:2%2
+pR = [];
+for expt_n = 1%:2
     expt_name = expts{expt_n, 1};
     cd(expt_name)
     conds = dir(expt_name);
@@ -35,11 +35,11 @@ for expt_n = 1:2%2
             continue
             %SELECTING GOOD EXPTS BASED ON MI FOR GR64f
         elseif expt_n == 1
-            if ismember(cond_n,[1,4,5,7,8,11,13,14,15,16,17,18]+2)
+            if ismember(cond_n,[1,4,5,7,8,11,13,14,15,16,17,18]+3)
                 continue
             end
         elseif expt_n == 2
-            if ismember(cond_n,[4,5,9,11,12,13,15,16,17,18,19,20]+2)
+            if ismember(cond_n,[4,5,9,11,12,13,15,16,17,18,19,20]+3)
                 continue
             end
         end
@@ -56,6 +56,7 @@ for expt_n = 1:2%2
         gotofig = 0;
         gotofig2 = 0;
         
+        
         RO = load('reward_order.mat');
         CO = load('choice_order.mat');
         CO = CO.choice_order;
@@ -63,6 +64,15 @@ for expt_n = 1:2%2
         choice_order = [];
         reward_order = [];
         inst_choice_ratio = [];
+        
+        X = load('all_variables_contingency_1.mat');
+        pR(count,1) = X.x;
+        X = load('all_variables_contingency_2.mat');
+        pR(count,2) = X.x;
+        if exist('all_variables_contingency_3.mat') == 2
+            X = load('all_variables_contingency_3.mat');
+            pR(count,3) = X.x;
+        end    
         
         for k = 1:size(CO,2)
         choice_order((k-1)*80 + 1 : (k)*80) = CO(:,k);
@@ -96,5 +106,60 @@ for expt_n = 1:2%2
         CR(count,1:length(choice_order)) = inst_choice_ratio;
     end
 end    
-                
-            
+    
+%% FOR Gr64f Tp = 1
+CR_high_low = [];
+count = 0
+ for i = 1:13
+    if pR(i,1) > 0.5 && pR(i,2) < 0.5
+        count = count+1
+        CR_high_low(count,:) = CR(i,60:160);
+    end    
+    if pR(i,1) < 0.5 && pR(i,2) > 0.5
+        count = count+1
+        CR_high_low(count,:) = 90-CR(i,60:160);
+    end    
+    if pR(i,2) >0.5 && pR(i,3) < 0.5
+        count = count+1
+        CR_high_low(count,:) = CR(i,140:240);
+    end    
+    if pR(i,2) <0.5 && pR(i,3) > 0.5
+        count = count+1
+        CR_high_low(count,:) = 90-CR(i,140:240);
+    end
+ end
+ 
+ CR_high_low_tA = []
+ for i = 6:length(CR_high_low)
+     CR_high_low_tA(:,i-5) = mean(CR_high_low(:,i-5:i),2);
+ end    
+ plot(mean(CR_high_low_tA,1))
+ hold on
+%  %% FOR R58E02 Tp = 1
+% CR_high_low = [];
+% count = 0
+%  for i = 1:14
+% %     if pR(i,1) > 0.5 && pR(i,2) < 0.5
+% %         count = count+1
+% %         CR_high_low(count,:) = CR(i,60:160);
+% %     end    
+% %     if pR(i,1) < 0.5 && pR(i,2) > 0.5
+% %         count = count+1
+% %         CR_high_low(count,:) = 90-CR(i,60:160);
+% %     end    
+%     if pR(i,2) >0.5 && pR(i,3) < 0.5
+%         count = count+1
+%         CR_high_low(count,:) = CR(i,140:240);
+%     end    
+%     if pR(i,2) <0.5 && pR(i,3) > 0.5
+%         count = count+1
+%         CR_high_low(count,:) = 90-CR(i,140:240);
+%     end
+%  end
+%     
+%  CR_high_low_tA = []
+%  for i = 6:length(CR_high_low)-6
+%      CR_high_low_tA(:,i-5) = mean(CR_high_low(:,i-5:i+5),1);
+%  end    
+%  plot(mean(CR_high_low_tA,1))
+%  hold on

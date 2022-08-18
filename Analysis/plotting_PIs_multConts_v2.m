@@ -24,6 +24,9 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
     ave_reward_ratios = [];
     ave_choice_ratios_sec_half = [];
     ave_reward_ratios_sec_half = [];
+    % ONLY FOR 100-0 EXPTS
+    num_turns_away_rewarded = zeros(1,16);
+    num_turns_away_unrewarded = zeros(1,16);
     
     color_vec = cbrewer('qual','Dark2',10,'cubic');
     Air_Color = 0*color_vec(6,:);
@@ -48,7 +51,7 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
             if startsWith(conds(cond_n).name, '.')
                 count = count+1;
                 continue
-                %SELECTING GOOD EXPTS BASED ON MI FOR GR64f
+                %SKIPPING LOW MI EXPTS FOR GR64f
 %             elseif expt_n == 1
 %                 if ismember(cond_n,[1,4,5,7,8,11,13,14,15,16,17,18]+2)
 %                     continue
@@ -57,6 +60,8 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
 %                 if ismember(cond_n,[4,5,9,11,12,13,15,16,17,18,19,20]+2)
 %                     continue
 %                 end
+            
+                
             end
               
             choice_order = [];
@@ -78,12 +83,12 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                 end
             end    
             
-            if length_conts == 4
-                subt = 3; %1;
-            elseif length_conts == 7
-                subt = 6;
+            if length_conts == 9
+                subt = 8; %1;
+            elseif length_conts == 8
+                subt = 7;
             else
-                subt = 17;
+                subt = 6;
             end    
             
             for conts = 1:length_conts-subt % this set of expts has 3 conts
@@ -200,12 +205,18 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                                 timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
                                 scatter(timestamps_summed(cc),2,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
                             end 
-                        end    
+                        end 
+                    end    
         %                 cc = cc+1; 
         %                 timestamps_summed(cc) = sum(timestamps_no_minus_ones(1:tt));
         %                 scatter(timestamps_summed(cc),460,200,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
         %                         scatter(timestamps_summed(cc),1,100,'s','filled','MarkerEdgeColor',dot_color,'MarkerFaceColor',dot_color)
 
+                   %ONLY FOR  100-0 EXPTS
+                    if reward(1,2) == 1
+                        rewarded_odor = 1;
+                    else
+                        rewarded_odor = 2;
                     end
                     hold off
                     [odor_crossing] = odor_crossings(region_at_time,air_arm,right_left,timestamps);
@@ -220,12 +231,32 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
                             scatter(odor_crossing(b).time,2,150,'s','filled','MarkerFaceColor',O_A_Color,'MarkerEdgeColor',O_A_Color)
                         elseif isequal(odor_crossing(b).type,{'OtoM'})
                             scatter(odor_crossing(b).time,3,150,'s','filled','MarkerFaceColor',M_O_Color,'MarkerEdgeColor',M_O_Color)  
+                            if rewarded_odor == 1
+                                num_turns_away_rewarded(expt_n,cond_n-2) = num_turns_away_rewarded(expt_n,cond_n-2)+1;
+                            else
+                                 num_turns_away_unrewarded(expt_n,cond_n-2) = num_turns_away_unrewarded(expt_n,cond_n-2)+1;
+                            end     
                         elseif isequal(odor_crossing(b).type,{'MtoO'})
                             scatter(odor_crossing(b).time,4,150,'s','filled','MarkerFaceColor',O_M_Color,'MarkerEdgeColor',O_M_Color) 
+                            if rewarded_odor == 2
+                                num_turns_away_rewarded(expt_n,cond_n-2) = num_turns_away_rewarded(expt_n,cond_n-2)+1;
+                            else
+                                 num_turns_away_unrewarded(expt_n,cond_n-2) = num_turns_away_unrewarded(expt_n,cond_n-2)+1;
+                            end 
                         elseif isequal(odor_crossing(b).type,{'MtoA'})
                             scatter(odor_crossing(b).time,5,150,'s','filled','MarkerFaceColor',Air_Color,'MarkerEdgeColor',Air_Color)
+                            if rewarded_odor == 2
+                                num_turns_away_rewarded(expt_n,cond_n-2) = num_turns_away_rewarded(expt_n,cond_n-2)+1;
+                            else
+                                 num_turns_away_unrewarded(expt_n,cond_n-2) = num_turns_away_unrewarded(expt_n,cond_n-2)+1;
+                            end 
                         elseif isequal(odor_crossing(b).type,{'OtoA'})
                             scatter(odor_crossing(b).time,6,150,'s','filled','MarkerFaceColor',Air_Color,'MarkerEdgeColor',Air_Color)
+                            if rewarded_odor == 1
+                                num_turns_away_rewarded(expt_n,cond_n-2) = num_turns_away_rewarded(expt_n,cond_n-2)+1;
+                            else
+                                 num_turns_away_unrewarded(expt_n,cond_n-2) = num_turns_away_unrewarded(expt_n,cond_n-2)+1;
+                            end 
                         end
                     end
 
@@ -466,6 +497,7 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
             save('inst_CR.mat','inst_choice_ratio')
             save('O_choice.mat','summed_O_choices_ends')
             save('M_choice.mat','summed_M_choices_ends')
+            save('odor_crossing.mat','odor_crossing')
 %                        
             fig_count = 0;
             close all
@@ -495,11 +527,11 @@ function [p_staying_g_Nreward,p_staying_g_reward,p_switching_g_Nreward,p_switchi
 %     scattered_dot_plot(transpose(pis(:, list)),100,1,4,8,marker_colors,1,col_pairs,[0.75,0.75,0.75],[{'PI - pre reward'},{'PI - post reward (OCT)'}],1,[0.35,0.35,0.35]);
 %     
     cd(expt_name)
-    
+    keyboard
     save('ave_CR_100_0.mat','ave_choice_ratios')
     save('ave_IR_100_0.mat','ave_reward_ratios')
-    save('ave_CR_sec_100_0.mat','ave_choice_ratios_sec_half')
-    save('ave_IR_sec_100_0.mat','ave_reward_ratios_sec_half')
+    save('num_turns_rewarded.mat','num_turns_away_rewarded')
+    save('num_turns_unrewarded.mat','num_turns_away_unrewarded')
     
     % 
     % figure(101)

@@ -2,8 +2,8 @@
 % regularization.
 
 
-clc
-clear
+% clc
+% clear
 % close all
 count = 0
 % Select spreadsheet containing experiment names
@@ -31,16 +31,18 @@ for expt_n = 1:2%length(expts)
     for cond_n = 1:length(conds)
         % Skip the folders containing '.'
         if startsWith(conds(cond_n).name, '.')
-            
+%             count = count+1;
             continue
+            %SKIPPING INCOMPLETE/LOW MI EXPTS FOR GR64f
         elseif expt_n == 1
-            if ismember(cond_n,[1,4,5,7,8,11,13,14,15,16,17,18]+2)
+            if ismember(cond_n,[1,4,5,7,8,9,11,13,14,15,16,17,18,22]+3)
                 continue
             end
         elseif expt_n == 2
-            if ismember(cond_n,[4,5,9,11,12,13,15,16,17,18,19,20]+2)
+            if ismember(cond_n,[4,5,6,9,11,12,13,15,16,17,18,19,20]+2)
                 continue
             end
+
         end
 
         count = count+1;
@@ -95,7 +97,7 @@ for expt_n = 1:2%length(expts)
 
 
             n=N-H;  % num of obs
-            p=2*H; % num of parameters
+            p=H; % num of parameters
             X=zeros(n,p);
 % RAN'S ORIGINAL PREDICTORS
         %     c = -1+2*eq(choice_order,2);
@@ -109,6 +111,11 @@ for expt_n = 1:2%length(expts)
 %                 X(i-H,(2*H+1):(3*H)) = c(i-(1:H)).*r(i-(1:H));
 %                 
 %             end
+
+% ONLY BIAS AS PREDICTOR
+%             X = []
+%             Y = choice_order((H+1):end)';
+%             X = ones(length(Y),1);
         
 % PREDICTORS MORE SIMILAR TO BARI ET AL 2019
             c = choice_order;
@@ -116,7 +123,7 @@ for expt_n = 1:2%length(expts)
             c_1_trials = find(c == 1);
             c(c_2_trials) = 1;
             c(c_1_trials) = -1;
-            
+%             
             r = reward_order;
             r_2_trials = find(r == 2);
             r_1_trials = find(r == 1);
@@ -126,8 +133,8 @@ for expt_n = 1:2%length(expts)
               Y = choice_order((H+1):end)';
             
               for i = (H+1):N
-                  X(i-H,1:H) = r(i-(1:H));
-%                   X(i-H,(H+1):(2*H)) = r(i-(1:H));
+                  X(i-H,1:H) = 1; %c(i-(1:H));
+                  %X(i-H,(H+1):(2*H)) = r(i-(1:H));
 %                   X(i-H,(2*H+1):(3*H)) = c(i-(1:H)).*r(i-(1:H));
                 
               end
@@ -278,18 +285,21 @@ for expt_n = 1:2%length(expts)
         Pc_mat{count} = Pc;
         P2_mat{count} = yhat;
         LossLOU_mat{count} = LossLOU;
-%         
-%         open('figure7.fig')
+        
+%         keyboard
+        
+%         open('inst_CR_lb10.fig')
 %         hold on
 %         smoothed_yhat = [];
-%         for i = 10:225
+%         for i = 10:length(yhat)
 %             smoothed_yhat(i-9,:) = mean(yhat(i-9:i));
 %         end
-%         plot([16:length(yhat)+15],yhat*90,'LineWidth',4,'Color',[0.75,0,0.75])
-% %        plot([25:length(yhat)+15],smoothed_yhat*90,'LineWidth',4,'Color',[0.75,0,0.75])
+% %         plot([1:length(yhat)],yhat*90,'LineWidth',4,'Color',[0.75,0,0.75])
+% %         plot([10:239],smoothed_yhat*90,'LineWidth',4,'Color',[0.75,0,0.75])
 %         
-% %         savefig('data_LogisitcRegression_reward_choice_predictors_timecourse_smoothed.fig')
+%         savefig('data_LogisitcRegression_reward_choice_predictors_timecourse_smoothed_20.fig')
 %         keyboard
 %         close all
     end    
 end    
+
