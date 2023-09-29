@@ -1,4 +1,6 @@
-cd('/groups/turner/home/rajagopalana/Documents/Turner Lab/Y-Arena/')
+% cd('/groups/turner/home/rajagopalana/Documents/Turner Lab/Y-Arena/')
+
+cd('/Volumes/SSD2TB/OlfactoryYMaze/');
 
 % Load excel sheet containing the various folders that data is stored in 
 % folders should be divided by condition . Eg. Sham, Ablated
@@ -134,16 +136,13 @@ for expt_n = 1:length(expts)
         % It would be useful to derive this generally using the reward probabiilities vector
         % itself i.e. P_RewardMCH
         hold on
-        if expt_n < 5 %== 1 || expt_n == 2
-            plot(Cumul_Error(61),Cumul_Correct(61),'r.','markersize',32)
-%             plot(Cumul_Error(101),Cumul_Correct(101),'r.','markersize',32)
-
-        else
-            plot(Cumul_Error(21),Cumul_Correct(21),'r.','markersize',32)
+        if NumBlocks == 2
             plot(Cumul_Error(41),Cumul_Correct(41),'r.','markersize',32)
+
+
+        elseif NumBlocks == 3
             plot(Cumul_Error(81),Cumul_Correct(81),'r.','markersize',32)
-            plot(Cumul_Error(121),Cumul_Correct(121),'r.','markersize',32)
-            plot(Cumul_Error(141),Cumul_Correct(141),'r.','markersize',32)
+            plot(Cumul_Error(161),Cumul_Correct(161),'r.','markersize',32)
         end
         saveas(gcf,'LearningCurve')
         save('YArenaRunLearningCurve.mat')
@@ -235,6 +234,8 @@ for expt_n = 1:length(expts)
         %DISTANCE TRAVELLED UP ARM RELATIVE TO A SKELETON IN THE CENTER OF
         %THE ARM.
 
+        % This set of coordinates need to be checked/updated for each
+        % batch of experiments, in case the camera moved
         p0 = [565,644];
         v1 = [559,177;565,644];
         v2 = [970,874;565,644];
@@ -337,9 +338,9 @@ for expt_n = 1:length(expts)
 % 
 % 
 %         end
-        
-        close all
-        
+%         
+%         close all
+%         
         % Odor Crossings
        
 
@@ -424,36 +425,36 @@ for expt_n = 1:length(expts)
         % Calculating % correct for OCT v MCH choices in naive and rewarded
         % conditions
         
-        if expt_n  < 5 %== 1 || expt_n == 2 % Corresponding to v1 of either sham or ablated flies where 40 trials were naive and 60 were rewarded
+        if NumBlocks == 2 
             if DominantOdor == 0
                 % when the number here says 40 it implies the first 40
                 % trials are being searched to find the number of rewarded options.
                 % Change this number to indicate how many trials are to be
                 % searched.
-                p_correct_naive_mat(expt_n,cond_n-2) = length(find(Choices(1:60) == 0))/length(Choices(1:60)); 
+                p_correct_naive_mat(expt_n,cond_n-2) = length(find(Choices(1:40) == 0))/length(Choices(1:40)); 
                 % here trial 41 onwards are being searched
-                p_correct_rewarded_mat(expt_n,cond_n-2) = length(find(Choices(61:end) == 0))/length(Choices(61:end));
+                p_correct_rewarded_mat(expt_n,cond_n-2) = length(find(Choices(41:end) == 0))/length(Choices(41:end));
                 % IN the next two lines only half of a block of trials is
                 % being used to calculate percentage correct indicated by
                 % the values 21 and 40 that indicate the second half of
                 % trials in the 40 trial naive block
-                p_correct_naive_half_mat(expt_n,cond_n-2) = length(find(Choices(31:60) == 0))/length(Choices(31:60));
-                p_correct_rewarded_half_mat(expt_n,cond_n-2) = length(find(Choices(91:end) == 0))/length(Choices(91:end));
+                p_correct_naive_half_mat(expt_n,cond_n-2) = length(find(Choices(21:40) == 0))/length(Choices(21:40));
+                p_correct_rewarded_half_mat(expt_n,cond_n-2) = length(find(Choices(71:end) == 0))/length(Choices(71:end));
             % The numbers in the brackets are all play similar roles and can be interpretted the same way for the next several lines 
             elseif DominantOdor == 1
-                p_correct_naive_mat(expt_n,cond_n-2) = length(find(Choices(1:60) == 1))/length(Choices(1:60));
-                p_correct_rewarded_mat(expt_n,cond_n-2) = length(find(Choices(61:end) == 1))/length(Choices(61:end));
-                p_correct_naive_half_mat(expt_n,cond_n-2) = length(find(Choices(31:60) == 1))/length(Choices(31:60));
-                p_correct_rewarded_half_mat(expt_n,cond_n-2) = length(find(Choices(91:end) == 1))/length(Choices(91:end));
+                p_correct_naive_mat(expt_n,cond_n-2) = length(find(Choices(1:40) == 1))/length(Choices(1:40));
+                p_correct_rewarded_mat(expt_n,cond_n-2) = length(find(Choices(41:end) == 1))/length(Choices(41:end));
+                p_correct_naive_half_mat(expt_n,cond_n-2) = length(find(Choices(21:40) == 1))/length(Choices(21:40));
+                p_correct_rewarded_half_mat(expt_n,cond_n-2) = length(find(Choices(71:end) == 1))/length(Choices(71:end));
             end
-%         elseif expt_n == 3 || expt_n == 4
+        elseif NumBlocks == 3
 %             if DominantOdor == 0
-%                 p_correct_naive_mat(expt_n,cond_n-2) = length(find(Choices(41:80) == 0))/length(Choices(41:80));
-%                 p_correct_rewarded_mat(expt_n,cond_n-2) = length(find(Choices(81:120) == 0))/length(Choices(81:120));
-%                 p_correct_naive_half_mat(expt_n,cond_n-2) = length(find(Choices(61:80) == 0))/length(Choices(61:80));
-%                 p_correct_rewarded_half_mat(expt_n,cond_n-2) = length(find(Choices(101:120) == 0))/length(Choices(101:120));
+%                 CR_1_mat(expt_n,cond_n-2) = length(find(Choices(1:80) == 0))/length(find(Choices(1:80) == 1));
+%                 CR_2_mat(expt_n,cond_n-2) = length(find(Choices(81:160) == 0))/length(find(Choices(81:160) == 1));
+%                 CR_3_mat(expt_n,cond_n-2) = length(find(Choices(161:end) == 0))/length(find(Choices(161:end) == 1));
+%                 
 %             elseif DominantOdor == 1
-%                 p_correct_naive_mat(expt_n,cond_n-2) = length(find(Choices(41:80) == 1))/length(Choices(41:80));
+%                 p_correct_naive_mat(expt_n,cond_n-2) = length(find(Choices(41:80) == 1))/length(find(Choices(41:80) == 1));
 %                 p_correct_rewarded_mat(expt_n,cond_n-2) = length(find(Choices(81:120) == 1))/length(Choices(81:120));
 %                 p_correct_naive_half_mat(expt_n,cond_n-2) = length(find(Choices(61:80) == 1))/length(Choices(61:80));
 %                 p_correct_rewarded_half_mat(expt_n,cond_n-2) = length(find(Choices(101:120) == 1))/length(Choices(101:120));
@@ -522,9 +523,12 @@ end
 
 keyboard
 
-save('time_per_choice.mat','time_per_choice')
-save('num_turns_rewarded.mat','num_turns_away_rewarded')
-save('num_turns_unrewarded.mat','num_turns_away_unrewarded')
+save('time_per_choice.mat','time_per_choice');
+save('num_turns_rewarded.mat','num_turns_away_rewarded');
+save('num_turns_unrewarded.mat','num_turns_away_unrewarded');
+save('p_correct_naive.mat','p_correct_naive_mat');
+save('p_correct_rewarded.mat','p_correct_rewarded_mat');
+
 % PLOTTING PREFERENCES FOR MCH V OCT TRIALS ONLY
 %plotting sham
 figure
